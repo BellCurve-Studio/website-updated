@@ -96,7 +96,49 @@ Avoid:
 
 `Create new implementation -> Duplicate existing behavior -> Introduce inconsistency`
 
-## 5. Keep Code Clean
+## 5. Use Existing Assets Properly
+
+The project contains a dedicated `public/assets` folder with the project's provided assets. These assets are the source of truth for images, icons, illustrations, logos, fonts, media, and other static resources.
+
+### Required behavior
+
+Before creating, importing, downloading, or replacing any visual asset:
+
+1. Inspect the `public/assets` folder.
+2. Identify whether an existing asset already matches the requirement.
+3. Reuse the existing asset whenever possible.
+4. Inspect the asset's dimensions, format, naming, and intended usage when relevant.
+5. Use the correct asset path and preserve the existing asset structure.
+6. Do not recreate an asset that already exists in `public/assets`.
+7. Do not replace an existing project asset with an external asset unless explicitly required.
+8. Do not introduce unnecessary duplicate assets.
+9. Do not move, rename, or delete assets unless the task explicitly requires it.
+10. If multiple versions of an asset exist, determine which one is intended by inspecting existing usage and surrounding project patterns.
+
+### Asset implementation
+
+When using assets from `public/assets`:
+
+- Reference them using the project's existing asset-loading conventions.
+- Preserve appropriate aspect ratios.
+- Use responsive sizing where applicable.
+- Optimize rendering without unnecessarily modifying the source asset.
+- Use appropriate semantic `alt` text for meaningful images.
+- Use empty `alt` text for purely decorative images when appropriate.
+- Ensure assets do not break responsive layouts.
+- Follow existing image optimization patterns used by the project.
+- Do not use placeholder images when a relevant project asset already exists.
+- Do not generate new icons, illustrations, logos, or graphics when the required asset is already available.
+
+### Asset priority
+
+The priority for visual assets is:
+
+`Existing project asset -> Existing project component/utility -> Existing dependency -> New asset only when genuinely required`
+
+The agent must treat `public/assets` as part of the existing project architecture rather than as an optional resource library.
+
+## 6. Keep Code Clean
 
 All code must be clean, structured, readable, and maintainable.
 
@@ -118,7 +160,7 @@ All code must be clean, structured, readable, and maintainable.
 - Handle errors intentionally.
 - Keep files logically organized.
 
-## 6. No Comments or Message Tags
+## 7. No Comments or Message Tags
 
 Do not add comments to the code.
 
@@ -140,7 +182,7 @@ Code should communicate its intent through structure, naming, and architecture.
 
 If something requires excessive comments to explain, simplify or restructure the implementation instead.
 
-## 7. No Unnecessary Output
+## 8. No Unnecessary Output
 
 Do not add unnecessary files, wrappers, abstractions, dependencies, or configuration.
 
@@ -152,7 +194,7 @@ Do not refactor large parts of the project unless the requested task genuinely r
 
 Keep the change set focused.
 
-## 8. Follow Existing Project Conventions
+## 9. Follow Existing Project Conventions
 
 The existing project is the source of truth for:
 
@@ -171,7 +213,7 @@ The existing project is the source of truth for:
 
 Do not impose a personal coding style when the project already has an established convention.
 
-## 9. Use Existing Dependencies Properly
+## 10. Use Existing Dependencies Properly
 
 Before installing or introducing a dependency:
 
@@ -182,7 +224,7 @@ Before installing or introducing a dependency:
 
 Do not add libraries for functionality that can reasonably be implemented with existing project tools.
 
-## 10. Responsive and Accessibility Considerations
+## 11. Responsive and Accessibility Considerations
 
 When working on UI:
 
@@ -195,7 +237,7 @@ When working on UI:
 - Support reduced motion when the project provides such behavior.
 - Do not sacrifice usability for visual effects.
 
-## 11. Performance
+## 12. Performance
 
 Performance should be considered during implementation.
 
@@ -212,7 +254,7 @@ Avoid:
 
 For animations, prefer GPU-friendly properties such as transforms and opacity when appropriate.
 
-## 12. Validation Before Completion
+## 13. Validation Before Completion
 
 Before considering a task complete:
 
@@ -227,7 +269,7 @@ Before considering a task complete:
 9. Verify that no unnecessary comments or message tags were introduced.
 10. Verify that the final code is clean and structured.
 
-## 13. Agent Decision Process
+## 14. Agent Decision Process
 
 For every task, follow this sequence:
 
@@ -259,7 +301,7 @@ Check correctness, quality, performance, responsiveness, animation cleanup, and 
 
 Leave the codebase clean with no unnecessary comments, message tags, temporary code, or unrelated changes.
 
-## 14. Core Rule
+## 15. Core Rule
 
 The agent must not treat the task as an isolated coding problem.
 
@@ -273,6 +315,7 @@ The priority order is:
 4. Existing dependencies and patterns
 5. Clean, minimal implementation
 6. New abstractions only when genuinely required
+7. New abstractions or assets only when genuinely required
 
 The final implementation must be production-quality, clean, structured, maintainable, and consistent with the rest of the codebase.
 
