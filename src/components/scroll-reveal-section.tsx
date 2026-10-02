@@ -37,54 +37,46 @@ const paragraph2Text =
 const clientRow1 = [
   {
     name: "Vinamilk",
-    caption: "VINAMILK",
     icon: "/assets/SVG/69e9f4f4c88302e5028f9618_Client-6.svg",
-    scaleClass: "scale-[1.85] sm:scale-[2.15] lg:scale-[2.4]",
+    scaleClass: "scale-[1.9] sm:scale-[2.15] lg:scale-[2.4]",
   },
   {
     name: "Moc Chau Creamery",
-    caption: "MOC CHAU CREAMERY",
     icon: "/assets/SVG/69e9f491acef69f9818ce334_Client-1.svg",
-    scaleClass: "scale-[1.3] sm:scale-[1.45] lg:scale-[1.6]",
+    scaleClass: "scale-[1.45] sm:scale-[1.65] lg:scale-[1.85]",
   },
   {
     name: "University of Sydney",
-    caption: "UNIVERSITY OF SYDNEY",
     icon: "/assets/SVG/69e9f4c62222c4e2399adb2d_Client-4.svg",
-    scaleClass: "scale-[1.75] sm:scale-[2.05] lg:scale-[2.3]",
+    scaleClass: "scale-[1.85] sm:scale-[2.1] lg:scale-[2.35]",
   },
   {
     name: "OH Architecture",
-    caption: "OH ARCHITECTURE",
     icon: "/assets/SVG/69e9f4dc7cb660c42ce224bd_Client.svg",
-    scaleClass: "scale-[1.45] sm:scale-[1.65] lg:scale-[1.85]",
+    scaleClass: "scale-[1.5] sm:scale-[1.7] lg:scale-[1.9]",
   },
 ];
 
 const clientRow2 = [
   {
     name: "Supersolid Agency",
-    caption: "SUPERSOLID AGENCY",
     icon: "/assets/SVG/69e9f4d0e415495ae306feb2_Client-3.svg",
-    scaleClass: "scale-[1.35] sm:scale-[1.5] lg:scale-[1.65]",
+    scaleClass: "scale-[1.6] sm:scale-[1.85] lg:scale-[2.1]",
   },
   {
     name: "SLIK Agency",
-    caption: "SLIK AGENCY",
     icon: "/assets/SVG/69e9f4ae5b2f1cfeee4e5276_Client-5.svg",
-    scaleClass: "scale-[1.45] sm:scale-[1.65] lg:scale-[1.85]",
+    scaleClass: "scale-[1.65] sm:scale-[1.9] lg:scale-[2.15]",
   },
   {
     name: "Mammoth Murals",
-    caption: "MAMMOTH MURALS",
     icon: "/assets/SVG/69e9f4ba9599b080b301b9f2_Client-7.svg",
-    scaleClass: "scale-[1.4] sm:scale-[1.55] lg:scale-[1.7]",
+    scaleClass: "scale-[1.6] sm:scale-[1.85] lg:scale-[2.1]",
   },
   {
     name: "Backhouse",
-    caption: "BACKHOUSE",
     icon: "/assets/SVG/69e9f4a05d31ea04c8f9f86a_Client-2.svg",
-    scaleClass: "scale-[1.35] sm:scale-[1.5] lg:scale-[1.65]",
+    scaleClass: "scale-[1.55] sm:scale-[1.8] lg:scale-[2.05]",
   },
 ];
 
@@ -391,9 +383,9 @@ export function ScrollRevealSection() {
           </div>
         </div>
 
-        <div className="client-logo-grid mt-24 sm:mt-32 lg:mt-40 pt-10 sm:pt-14 border-t border-white/10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-12 lg:gap-x-14 xl:gap-x-20 items-start">
-            <div className="lg:col-span-4 flex items-start">
+        <div className="client-logo-grid mt-20 sm:mt-28 lg:mt-36 pt-10 sm:pt-14 border-t border-white/10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-10 lg:gap-x-12 xl:gap-x-16 items-start">
+            <div className="lg:col-span-4 flex items-center lg:h-24 sm:lg:h-28 lg:h-32">
               <div className="flex items-center gap-2.5 text-xs sm:text-[13px] font-mono tracking-wider text-white/55">
                 <span className="h-2 w-2 rounded-full bg-white/40 inline-block shrink-0" />
                 <span>Brands we&apos;ve helped</span>
@@ -401,13 +393,13 @@ export function ScrollRevealSection() {
             </div>
 
             <div className="lg:col-span-8 flex flex-col">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 sm:gap-x-8 lg:gap-x-12 pb-14 sm:pb-20 border-b border-white/10">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 sm:gap-x-8 lg:gap-x-10 pb-6 sm:pb-8 lg:pb-10 border-b border-white/10">
                 {clientRow1.map((client) => (
                   <div
-                    key={client.caption}
-                    className="client-logo-card group flex flex-col items-center justify-between text-center select-none"
+                    key={client.name}
+                    className="client-logo-card group flex items-center justify-center text-center select-none"
                   >
-                    <div className="h-28 sm:h-36 lg:h-44 w-full flex items-center justify-center">
+                    <div className="h-24 sm:h-28 lg:h-32 w-full flex items-center justify-center">
                       <div className="transition-transform duration-300 group-hover:scale-105 flex items-center justify-center w-full">
                         <div
                           className={`flex items-center justify-center origin-center ${client.scaleClass}`}
@@ -417,25 +409,22 @@ export function ScrollRevealSection() {
                             alt={client.name}
                             width={320}
                             height={320}
-                            className="h-16 sm:h-20 lg:h-24 w-auto object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                            className="h-16 sm:h-20 lg:h-24 w-auto max-w-[85%] object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300"
                           />
                         </div>
                       </div>
                     </div>
-                    <span className="mt-6 sm:mt-8 font-mono text-[9px] sm:text-[10px] tracking-[0.2em] text-white/35 uppercase transition-colors duration-300 group-hover:text-white/60">
-                      {client.caption}
-                    </span>
                   </div>
                 ))}
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 sm:gap-x-8 lg:gap-x-12 pt-14 sm:pt-20">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 sm:gap-x-8 lg:gap-x-10 pt-6 sm:pt-8 lg:pt-10">
                 {clientRow2.map((client) => (
                   <div
-                    key={client.caption}
-                    className="client-logo-card group flex flex-col items-center justify-between text-center select-none"
+                    key={client.name}
+                    className="client-logo-card group flex items-center justify-center text-center select-none"
                   >
-                    <div className="h-28 sm:h-36 lg:h-44 w-full flex items-center justify-center">
+                    <div className="h-24 sm:h-28 lg:h-32 w-full flex items-center justify-center">
                       <div className="transition-transform duration-300 group-hover:scale-105 flex items-center justify-center w-full">
                         <div
                           className={`flex items-center justify-center origin-center ${client.scaleClass}`}
@@ -445,14 +434,11 @@ export function ScrollRevealSection() {
                             alt={client.name}
                             width={320}
                             height={320}
-                            className="h-16 sm:h-20 lg:h-24 w-auto object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                            className="h-16 sm:h-20 lg:h-24 w-auto max-w-[85%] object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300"
                           />
                         </div>
                       </div>
                     </div>
-                    <span className="mt-6 sm:mt-8 font-mono text-[9px] sm:text-[10px] tracking-[0.2em] text-white/35 uppercase transition-colors duration-300 group-hover:text-white/60">
-                      {client.caption}
-                    </span>
                   </div>
                 ))}
               </div>
