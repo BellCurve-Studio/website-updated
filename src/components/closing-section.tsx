@@ -2,13 +2,11 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import { gsap, ScrollTrigger, useGSAP, MOTION_QUERY, prefersReducedMotion } from "@/lib/animation";
+import { STUDIO, SOCIALS } from "@/lib/studio-data";
+import { StudioWordmark } from "@/components/ui/studio-wordmark";
 import { useLenis } from "lenis/react";
 import { StudioCta } from "@/components/ui/studio-cta";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const FOOTER_LINKS = [
   { label: "Work", href: "#work" },
@@ -26,11 +24,11 @@ function AwardMark({ name }: { name: "FWA" | "CSSDesignAwards" | "Awwwards" }) {
         src="/assets/SVG/cta_home_svgs.svg"
         alt=""
         fill
-        className={isAwwwards ? "invert" : "invert [clip-path:inset(0_72%_0_0)]"}
+        className={isAwwwards ? "invert" : "invert [clip-path:polygon(0_0,30%_0,30%_35%,18%_35%,18%_65%,30%_65%,30%_100%,0_100%)]"}
       />
       {!isAwwwards && (
         <>
-          <Image src="/assets/SVG/cta_home_svgs.svg" alt="" fill className="invert [clip-path:inset(0_0_0_72%)]" />
+          <Image src="/assets/SVG/cta_home_svgs.svg" alt="" fill className="invert [clip-path:polygon(70%_0,100%_0,100%_100%,70%_100%,70%_65%,82%_65%,82%_35%,70%_35%)]" />
           <span className={`absolute inset-0 flex items-center justify-center ${name === "FWA" ? "font-heading text-[clamp(1.5rem,3.5vw,3.5rem)] tracking-[-0.04em]" : "text-[clamp(0.5rem,0.9vw,0.8rem)] font-semibold"}`}>
             {name === "FWA" ? "FWA" : "CSSDesignAwards"}
           </span>
@@ -47,7 +45,7 @@ export function ClosingSection() {
   useGSAP(
     () => {
       const media = gsap.matchMedia();
-      media.add("(prefers-reduced-motion: no-preference)", () => {
+      media.add(MOTION_QUERY, () => {
         gsap.timeline({
           defaults: { duration: 1, ease: "power3.out" },
           scrollTrigger: { trigger: ".closing-title", start: "top 85%", once: true },
@@ -94,7 +92,7 @@ export function ClosingSection() {
   );
 
   const scrollToTop = () => {
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedMotion = prefersReducedMotion();
     if (lenis) lenis.scrollTo(0, { duration: 1.4, immediate: reducedMotion });
     else window.scrollTo({ top: 0, behavior: reducedMotion ? "instant" : "smooth" });
   };
@@ -128,7 +126,7 @@ export function ClosingSection() {
             </span>
           </h2>
           <StudioCta className="closing-main-cta mt-14 gap-4 p-2 pl-4 text-[clamp(1.35rem,2.8vw,3rem)] leading-tight sm:mt-20 sm:gap-5 sm:p-3 sm:pl-5 [&>span:last-child]:size-11 sm:[&>span:last-child]:size-14 [&_img]:size-8 sm:[&_img]:size-10">
-            Tell us your story
+            Start a Project
           </StudioCta>
         </div>
 
@@ -140,9 +138,9 @@ export function ClosingSection() {
           </div>
           <figure className="max-w-[510px] text-center">
             <blockquote className="text-xl leading-tight font-bold tracking-tight sm:text-2xl lg:text-[28px]">
-              &ldquo;A passionate team who listens deeply, collaborates openly, and always delivers with care.&rdquo;
+              &ldquo;Purpose-built to deliver unforgettable digital experiences and elevate brands beyond the ordinary.&rdquo;
             </blockquote>
-            <figcaption className="mt-7 font-mono text-[10px] tracking-wide text-white/65 uppercase sm:mt-10 sm:text-xs">— University of Sydney</figcaption>
+            <figcaption className="mt-7 font-mono text-[10px] tracking-wide text-white/65 uppercase sm:mt-10 sm:text-xs">— BellCurve Studios</figcaption>
           </figure>
         </div>
       </section>
@@ -151,13 +149,14 @@ export function ClosingSection() {
         <div className="mx-auto max-w-[1640px]">
           <div className="grid grid-cols-1 gap-12 border-b border-white/15 pb-16 sm:grid-cols-2 lg:grid-cols-3 lg:gap-20">
             <div>
-              <a href="#" onClick={(event) => { event.preventDefault(); scrollToTop(); }} aria-label="Monolog home" className="inline-block focus-visible:outline-2 focus-visible:outline-offset-6">
-                <Image src="/assets/SVG/navbar_home_svg.svg" alt="Monolog" width={150} height={36} className="h-auto w-36 invert" />
+              <a href="#" onClick={(event) => { event.preventDefault(); scrollToTop(); }} aria-label="BellCurve Studios home" className="inline-block focus-visible:outline-2 focus-visible:outline-offset-6">
+                <StudioWordmark className="[&>span:first-child]:text-[34px]" />
               </a>
-              <p className="mt-6 max-w-[260px] text-sm leading-relaxed text-white/55">Independent minds.<br />Unforgettable experiences.</p>
-              <a href="https://webflow.com/@byhuy" target="_blank" rel="noopener noreferrer" className="mt-7 inline-block focus-visible:outline-2 focus-visible:outline-offset-6">
-                <Image src="/assets/SVG/webflow-certified-partner-page.svg" alt="Webflow certified partner" width={160} height={32} className="h-auto w-40 brightness-0 invert" />
-              </a>
+              <p className="mt-6 max-w-[260px] text-sm leading-relaxed text-white/55">Bespoke creative technology.<br />Immersive digital experiences.</p>
+              <div className="mt-7 flex flex-wrap gap-3 font-mono text-[9px] text-white/65">
+                <span className="rounded-xs border border-white/20 px-2 py-2">ISO 27001 Certified</span>
+                <span className="rounded-xs border border-white/20 px-2 py-2">AICPA SOC Certified</span>
+              </div>
             </div>
             <div>
               <p className="mb-5 font-mono text-xs text-white/45 uppercase">Navigation</p>
@@ -166,27 +165,25 @@ export function ClosingSection() {
                   <a key={link.href} href={link.href} onClick={(event) => {
                     if (lenis) {
                       event.preventDefault();
-                      lenis.scrollTo(link.href, { duration: 1.2, immediate: window.matchMedia("(prefers-reduced-motion: reduce)").matches });
+                      lenis.scrollTo(link.href, { duration: 1.2, immediate: prefersReducedMotion() });
                     }
                   }} className="flex items-center justify-between gap-3 hover:text-white/60 focus-visible:outline-2 focus-visible:outline-offset-4">{link.label}<span aria-hidden="true">↗</span></a>
                 ))}
-                <a href="https://cal.com/byhuy/project-intro-call" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between gap-3 hover:text-white/60 focus-visible:outline-2 focus-visible:outline-offset-4">Contact<span aria-hidden="true">↗</span></a>
+                <a href={STUDIO.contact} className="flex items-center justify-between gap-3 hover:text-white/60 focus-visible:outline-2 focus-visible:outline-offset-4">Contact<span aria-hidden="true">↗</span></a>
               </nav>
             </div>
             <div className="sm:col-span-2 lg:col-span-1">
               <p className="mb-5 font-mono text-xs text-white/45 uppercase">Studio details</p>
-              <a href="mailto:hello@bymonolog.com" className="text-xl font-semibold tracking-tight hover:text-white/60 focus-visible:outline-2 focus-visible:outline-offset-4">hello@bymonolog.com ↗</a>
-              <p className="mt-4 text-sm leading-relaxed text-white/55">Based in Melbourne &amp; Hanoi.<br />Working worldwide.</p>
+              <a href={`mailto:${STUDIO.email}`} className="break-all text-xl font-semibold tracking-tight hover:text-white/60 focus-visible:outline-2 focus-visible:outline-offset-4">{STUDIO.email} ↗</a>
+              <p className="mt-4 text-sm leading-relaxed text-white/55">Based in Delhi NCR, India.<br />Working worldwide.</p>
               <div className="mt-6 flex flex-wrap gap-5 text-xs font-medium">
-                <a href="https://www.youtube.com/@by_huy" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 focus-visible:outline-2 focus-visible:outline-offset-4">YouTube ↗</a>
-                <a href="https://www.linkedin.com/in/byhuy/" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 focus-visible:outline-2 focus-visible:outline-offset-4">LinkedIn ↗</a>
-                <a href="https://www.instagram.com/by_huy/" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 focus-visible:outline-2 focus-visible:outline-offset-4">Instagram ↗</a>
+                {SOCIALS.map((social) => <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" className="hover:text-white/60 focus-visible:outline-2 focus-visible:outline-offset-4">{social.label} ↗</a>)}
               </div>
             </div>
           </div>
           <div className="flex flex-col gap-5 pt-7 text-[10px] text-white/45 sm:flex-row sm:items-center sm:justify-between sm:text-xs">
-            <p className="font-mono">© {new Date().getFullYear()} MONOLOG Studio</p>
-            <p className="font-medium">『Refuse to be underestimated.』</p>
+            <p className="font-mono">© {new Date().getFullYear()} BellCurve Studios</p>
+            <p className="font-medium">Founded by Piyush Yadav. Delhi NCR, India.</p>
             <button type="button" onClick={scrollToTop} className="min-h-11 w-fit cursor-pointer text-sm font-semibold text-[#f0f0eb] hover:text-white/60 focus-visible:outline-2 focus-visible:outline-offset-4">Back to top ↑</button>
           </div>
         </div>

@@ -9,7 +9,7 @@ import { ClosingSection } from "@/components/closing-section";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#ddddd8] text-[#141414] antialiased">
+    <main id="top" className="min-h-screen bg-[#ddddd8] text-[#141414] antialiased">
       <HeroSection />
       <ScrollRevealSection />
       <GapRevealSection />
@@ -18,6 +18,6 @@ export default function Home() {
       <ProjectJourneySection />
       <FaqSection />
       <ClosingSection />
-    </div>
+    </main>
   );
 }

@@ -1,174 +1,56 @@
 "use client";
 
-import React, { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import { useRef, useState } from "react";
+import { gsap, useGSAP, MOTION_QUERY } from "@/lib/animation";
+import { SERVICES } from "@/lib/studio-data";
+import { StudioMedia } from "@/components/ui/studio-media";
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+const FILMS = [SERVICES[0], SERVICES[2], SERVICES[4]];
 
 export function GapRevealSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const contentWrapperRef = useRef<HTMLDivElement>(null);
-  const leftTextRef = useRef<HTMLSpanElement>(null);
-  const rightTextRef = useRef<HTMLSpanElement>(null);
-  const videoWrapperRef = useRef<HTMLDivElement>(null);
-  const bottomTextRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
+  const activeRef = useRef(0);
+  const [activeFilm, setActiveFilm] = useState(0);
 
-  useGSAP(
-    () => {
-      const getOffsetX = () => {
-        if (typeof window === "undefined") return 120;
-        return Math.min(Math.max(window.innerWidth * 0.1, 40), 160);
-      };
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "+=2000",
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      tl.fromTo(
-        contentWrapperRef.current,
-        { opacity: 0, scale: 0.9, y: 30 },
-        { opacity: 1, scale: 1, y: 0, duration: 0.22, ease: "power2.out" },
-        0
-      );
-
-      tl.fromTo(
-        bottomTextRef.current,
-        { opacity: 0, y: 24 },
-        { opacity: 1, y: 0, duration: 0.22, ease: "power2.out" },
-        0.05
-      );
-
-      tl.fromTo(
-        leftTextRef.current,
-        { x: () => -getOffsetX() },
-        { x: 0, duration: 0.52, ease: "power1.inOut" },
-        0.22
-      );
-
-      tl.fromTo(
-        rightTextRef.current,
-        { x: () => getOffsetX() },
-        { x: 0, duration: 0.52, ease: "power1.inOut" },
-        0.22
-      );
-
-      tl.to(
-        ".gap-video-1",
-        { opacity: 0, duration: 0.16, ease: "power1.inOut" },
-        0.34
-      );
-      tl.fromTo(
-        ".gap-video-2",
-        { opacity: 0 },
-        { opacity: 1, duration: 0.16, ease: "power1.inOut" },
-        0.34
-      );
-
-      tl.to(
-        ".gap-video-2",
-        { opacity: 0, duration: 0.16, ease: "power1.inOut" },
-        0.54
-      );
-      tl.fromTo(
-        ".gap-video-3",
-        { opacity: 0 },
-        { opacity: 1, duration: 0.16, ease: "power1.inOut" },
-        0.54
-      );
-    },
-    { scope: containerRef }
-  );
+  useGSAP(() => {
+    const media = gsap.matchMedia();
+    media.add({ desktop: "(min-width: 1024px)", motion: MOTION_QUERY }, (context) => {
+      if (!context.conditions?.motion) return;
+      if (!context.conditions.desktop) {
+        gsap.from(".gap-content", { y: 24, autoAlpha: 0, duration: 0.8, ease: "power3.out", scrollTrigger: { trigger: containerRef.current, start: "top 85%", once: true } });
+        return;
+      }
+      const timeline = gsap.timeline({ scrollTrigger: {
+        trigger: containerRef.current, start: "top top", end: () => `+=${Math.round(window.innerHeight * 1.15)}`, pin: true, scrub: 0.65, invalidateOnRefresh: true,
+        onUpdate: (trigger) => { const next = Math.min(2, Math.floor(trigger.progress * 3)); if (next !== activeRef.current) { activeRef.current = next; setActiveFilm(next); } },
+      } });
+      timeline.fromTo(".gap-word-left", { x: -65 }, { x: 0, duration: 1, ease: "none" }, 0)
+        .fromTo(".gap-word-right", { x: 65 }, { x: 0, duration: 1, ease: "none" }, 0)
+        .fromTo(".gap-media", { scale: 0.9 }, { scale: 1.03, duration: 1, ease: "none" }, 0)
+        .to(".gap-film-0", { autoAlpha: 0, duration: 0.16 }, 0.27)
+        .fromTo(".gap-film-1", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.16 }, 0.27)
+        .to(".gap-film-1", { autoAlpha: 0, duration: 0.16 }, 0.59)
+        .fromTo(".gap-film-2", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.16 }, 0.59);
+    });
+    return () => media.revert();
+  }, { scope: containerRef });
 
   return (
-    <section
-      ref={containerRef}
-      className="relative z-20 h-screen w-full bg-[#121212] text-[#f0f0eb] overflow-hidden flex flex-col justify-between items-center px-4 sm:px-6 md:px-10 selection:bg-white selection:text-black"
-    >
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.045] mix-blend-screen"
-        style={{
-          backgroundImage:
-            "url('/assets/PNG/692114faea9b602a766335ec_download.png')",
-          backgroundRepeat: "repeat",
-        }}
-      />
-
-      <div className="w-full pt-20 sm:pt-24 shrink-0" />
-
-      <div
-        ref={contentWrapperRef}
-        className="relative z-10 w-full flex items-center justify-center my-auto will-change-transform"
-      >
-        <div className="flex items-center justify-center w-full max-w-[1720px] px-2 sm:px-4">
-          <span
-            ref={leftTextRef}
-            className="hero-heading text-[clamp(2rem,5.8vw,7rem)] font-bold tracking-[-0.03em] uppercase text-white whitespace-nowrap select-none will-change-transform leading-none pr-3 sm:pr-5 lg:pr-8 shrink-0 text-right"
-          >
-            WE CLOSE
-          </span>
-
-          <div
-            ref={videoWrapperRef}
-            className="relative aspect-[9/13] w-24 sm:w-32 md:w-40 lg:w-48 xl:w-56 shrink-0 overflow-hidden rounded-xl sm:rounded-2xl border border-white/20 bg-black shadow-2xl shadow-black/90 my-auto"
-          >
-            <video
-              src="/assets/WEBM/Mammoth%20Murals%20Compressed.webm"
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              className="gap-video-1 absolute inset-0 h-full w-full object-cover"
-            />
-            <video
-              src="/assets/WEBM/OH%20Arch%20Compressed.webm"
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              className="gap-video-2 absolute inset-0 h-full w-full object-cover opacity-0"
-            />
-            <video
-              src="/assets/WEBM/Looping%20About%20photo.webm"
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              className="gap-video-3 absolute inset-0 h-full w-full object-cover opacity-0"
-            />
+    <section id="direction" ref={containerRef} aria-labelledby="direction-heading" className="relative flex min-h-[85svh] flex-col justify-center overflow-clip border-t border-white/10 bg-[#121212] py-20 text-[#f0f0eb] lg:min-h-screen lg:py-12">
+      <div className="studio-shell gap-content">
+        <p className="section-label mb-12 text-center lg:mb-16">Bespoke creative technology</p>
+        <h2 id="direction-heading" className="sr-only">Beyond ordinary. Creative engineering for visionary brands.</h2>
+        <div aria-hidden="true" className="flex flex-col items-center justify-center gap-6 lg:flex-row lg:gap-7">
+          <span className="gap-word-left font-heading text-[clamp(4rem,8.5vw,9.5rem)] leading-none tracking-tight">BEYOND</span>
+          <div className="gap-media relative aspect-[16/10] w-full max-w-[380px] overflow-hidden rounded-lg border border-white/15 bg-[#202020] lg:aspect-[3/4] lg:w-[22%] lg:max-w-[270px]">
+            {FILMS.map((film, index) => <div key={film.title} className={`gap-film-${index} absolute inset-0 ${index === 0 ? "" : "invisible opacity-0"}`}><StudioMedia image={film.image} video={film.video} enabled={activeFilm === index} sizes="(min-width:1024px) 25vw, 85vw" /></div>)}
           </div>
-
-          <span
-            ref={rightTextRef}
-            className="hero-heading text-[clamp(2rem,5.8vw,7rem)] font-bold tracking-[-0.03em] uppercase text-white whitespace-nowrap select-none will-change-transform leading-none pl-3 sm:pl-5 lg:pl-8 shrink-0 text-left"
-          >
-            THAT GAP
-          </span>
+          <span className="gap-word-right font-heading text-[clamp(4rem,8.5vw,9.5rem)] leading-none tracking-tight">ORDINARY.</span>
         </div>
-      </div>
-
-      <div
-        ref={bottomTextRef}
-        className="relative z-10 w-full max-w-[620px] mx-auto text-center px-4 pb-10 sm:pb-14 lg:pb-16 shrink-0 will-change-transform"
-      >
-        <p className="text-xs sm:text-[13.5px] md:text-[14.5px] leading-relaxed text-white/60 tracking-tight font-sans">
-          Your website is where ideal customers decide if you&apos;re worth
-          their time. We take what makes you irreplaceable, shape the entire
-          experience around it, and make sure they feel that before they read
-          another word.
-        </p>
+        <div className="mx-auto mt-12 grid max-w-[940px] grid-cols-1 gap-8 border-t border-white/15 pt-7 sm:grid-cols-2 lg:mt-16">
+          <p className="text-base leading-relaxed font-semibold sm:text-lg">Template agencies aren’t creative engineering.<br /><span className="text-white/50">Your ambition deserves an original.</span></p>
+          <p className="text-sm leading-relaxed text-white/55">We engineer custom GPU pipelines, considered motion systems, and bespoke typography. Uncompromising craft, fluid interaction, and an experience built around your brand.</p>
+        </div>
       </div>
     </section>
   );

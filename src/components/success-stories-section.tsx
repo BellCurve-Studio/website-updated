@@ -1,103 +1,9 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
-
-interface ProjectItem {
-  id: string;
-  number: string;
-  title: string;
-  description: string;
-  stat: string;
-  statLabel: string;
-  image: string;
-  video?: string;
-  link: string;
-  hasAwardBadge?: boolean;
-}
-
-const PROJECTS: ProjectItem[] = [
-  {
-    id: "oh-architecture",
-    number: "01/06",
-    title: "OH Architecture",
-    description:
-      "Brand refresh and website for a practice with a decade of crafting high-end homes for Australian families.",
-    stat: "21%",
-    statLabel: "Increase in conversions with projects starting from $2M+",
-    image: "/assets/AVIF/68e36f423545f0f0d624de8c_image 6.avif",
-    video: "/assets/WEBM/OH Arch Compressed.webm",
-    link: "https://www.oharchitecture.com.au/",
-  },
-  {
-    id: "supersolid",
-    number: "02/06",
-    title: "Supersolid",
-    description:
-      "Website for a 100% creative-owned Sydney agency built to merge commercial value with cultural impact.",
-    stat: "90%",
-    statLabel: "Increase in project case study engagement",
-    image: "/assets/AVIF/68e36feaa84a7e56f526ef97_15_Mikeas_34513 1.avif",
-    video: "/assets/MP4/Supersolid Thumbnail Compressed.mp4",
-    link: "https://www.supersolid.agency/",
-    hasAwardBadge: true,
-  },
-  {
-    id: "mammoth-murals",
-    number: "03/06",
-    title: "Mammoth Murals",
-    description:
-      "Brand strategy, identity and website for an established mural agency with a decade of large-scale public art behind it.",
-    stat: "$100K+",
-    statLabel: "In new work within 30 days of launch",
-    image: "/assets/AVIF/68e36fd385a3ac7e20eb2a7c_IMG_2674 1.avif",
-    video: "/assets/WEBM/Mammoth Murals Compressed.webm",
-    link: "https://mammothmurals.com/",
-  },
-  {
-    id: "hiss-sydney",
-    number: "04/06",
-    title: "HISS (University of Sydney)",
-    description:
-      "Brand identity and website for a University of Sydney initiative challenging the norms of queer education on a global stage.",
-    stat: "15+",
-    statLabel: "Global universities united on a single platform",
-    image: "/assets/AVIF/69490bd57585b67be7541c7e_11_Xavier_34190 1.avif",
-    video: "/assets/MP4/HISS Reel Compressed.mp4",
-    link: "https://www.hiss.sydney/",
-    hasAwardBadge: true,
-  },
-  {
-    id: "slik-creative",
-    number: "05/06",
-    title: "SLIK Creative",
-    description:
-      "Website for an Australian activation agency pushing creativity further for some of the country's most ambitious brands.",
-    stat: "2.4x",
-    statLabel: "Longer session duration on case studies",
-    image: "/assets/AVIF/6a10111e38d73116c8849278_Slik.avif",
-    video: "/assets/WEBM/SLIK-web.webm",
-    link: "https://www.slik.com.au/",
-  },
-  {
-    id: "vinamilk",
-    number: "06/06",
-    title: "Vinamilk",
-    description:
-      "Digital brand evolution and interactive storytelling platform for Southeast Asia's premier dairy powerhouse.",
-    stat: "4.2M+",
-    statLabel: "Active quarterly digital impressions",
-    image: "/assets/AVIF/69490bd9af84227880218311_InUse UHT KD 180.avif",
-    video: "/assets/WEBM/Design FINAL compressed.webm",
-    link: "https://vinamilk.com.vn/",
-    hasAwardBadge: true,
-  },
-];
+import { gsap, useGSAP, MOTION_QUERY } from "@/lib/animation";
+import { PROJECTS, STUDIO, type StudioProject } from "@/lib/studio-data";
+import { StudioMedia } from "@/components/ui/studio-media";
 
 function AwardBadge() {
   return (
@@ -118,64 +24,33 @@ function AwardBadge() {
   );
 }
 
-function ProjectCard({ project }: { project: ProjectItem }) {
+function ProjectCard({ project }: { project: StudioProject }) {
   const [isHovered, setIsHovered] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {});
-    }
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
-  };
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
 
   return (
     <div
       className="project-item group w-full"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onFocusCapture={handleMouseEnter}
+      onBlurCapture={handleMouseLeave}
     >
       <a
         href={project.link}
-        target="_blank"
-        rel="noopener noreferrer"
         className="block"
       >
         <div className="flex flex-col lg:flex-row lg:items-stretch gap-5 sm:gap-7 xl:gap-9">
           <div className="w-full lg:w-[64%] xl:w-[65%] shrink-0">
             <div className="relative aspect-[16/10] sm:aspect-[1.62/1] w-full overflow-hidden rounded-md sm:rounded-lg bg-[#c8c7c1] border border-black/10 shadow-xs">
               <div className="project-media-inner absolute -inset-y-[14%] inset-x-0 w-full h-[128%] will-change-transform">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
+                <StudioMedia
+                  image={project.image}
+                  video={project.video}
+                  enabled={isHovered}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 65vw, 850px"
-                  className={`object-cover transition-transform duration-700 ease-out ${
-                    isHovered ? "scale-[1.03]" : "scale-100"
-                  }`}
-                  priority={project.id === "oh-architecture"}
                 />
-
-                {project.video && (
-                  <video
-                    ref={videoRef}
-                    src={project.video}
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-out ${
-                      isHovered ? "opacity-100" : "opacity-0"
-                    }`}
-                  />
-                )}
               </div>
 
               <div className="absolute top-3.5 right-3.5 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-md border border-black/10 text-black shadow-xs opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105">
@@ -188,7 +63,7 @@ function ProjectCard({ project }: { project: ProjectItem }) {
             <div>
               <div className="flex items-center justify-between gap-3 mb-2.5">
                 <div className="flex items-center gap-1.5 font-mono text-xs text-black/60 tracking-wider">
-                  <span className="font-semibold text-black/80">SS</span>
+                  <span className="font-semibold text-black/80">BC</span>
                   <span className="text-black/40">←</span>
                   <span className="rounded border border-black/30 px-1 py-0.5 text-[10px] font-mono font-medium text-black/80 bg-black/[0.03]">
                     {project.number}
@@ -227,47 +102,51 @@ export function SuccessStoriesSection() {
 
   useGSAP(
     () => {
-      const items = gsap.utils.toArray<HTMLElement>(".project-item");
-      items.forEach((item) => {
-        const mediaInner = item.querySelector<HTMLElement>(
-          ".project-media-inner"
-        );
-        if (mediaInner) {
-          gsap.fromTo(
-            mediaInner,
-            { yPercent: -9 },
-            {
-              yPercent: 9,
-              ease: "none",
-              scrollTrigger: {
-                trigger: item,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 1.2,
-              },
-            }
+      const media = gsap.matchMedia();
+      media.add(MOTION_QUERY, () => {
+        const items = gsap.utils.toArray<HTMLElement>(".project-item");
+        items.forEach((item) => {
+          const mediaInner = item.querySelector<HTMLElement>(
+            ".project-media-inner"
           );
-        }
+          if (mediaInner) {
+            gsap.fromTo(
+              mediaInner,
+              { yPercent: -9 },
+              {
+                yPercent: 9,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: item,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: 1.2,
+                },
+              }
+            );
+          }
 
-        const info = item.querySelector<HTMLElement>(".project-info");
-        if (info) {
-          gsap.fromTo(
-            info,
-            { opacity: 0.9, y: 12 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.5,
-              ease: "power2.out",
-              scrollTrigger: {
-                trigger: item,
-                start: "top 85%",
-                toggleActions: "play none none reverse",
-              },
-            }
-          );
-        }
+          const info = item.querySelector<HTMLElement>(".project-info");
+          if (info) {
+            gsap.fromTo(
+              info,
+              { opacity: 0.9, y: 12 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                ease: "power2.out",
+                scrollTrigger: {
+                  trigger: item,
+                  start: "top 85%",
+                  once: true,
+                },
+              }
+            );
+          }
+        });
       });
+      return () => media.revert();
     },
     { scope: containerRef }
   );
@@ -293,7 +172,7 @@ export function SuccessStoriesSection() {
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-[#7a7a75]" />
               <span className="text-[14px] font-medium tracking-tight text-[#141414]">
-                Success Stories
+                Selected Works
               </span>
             </div>
           </div>
@@ -316,12 +195,10 @@ export function SuccessStoriesSection() {
               </div>
 
               <a
-                href="https://cal.com/byhuy/project-intro-call"
-                target="_blank"
-                rel="noopener noreferrer"
+                href={STUDIO.contact}
                 className="group inline-flex items-center gap-2.5 rounded-full bg-[#141414] px-5 py-2.5 text-xs sm:text-sm font-semibold text-[#f5f5f0] shadow-xs transition-all duration-300 hover:bg-black hover:scale-[1.02] w-fit"
               >
-                <span>Start a project with us</span>
+                <span>Start a Project</span>
                 <span className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5 font-mono text-xs">
                   ↗
                 </span>

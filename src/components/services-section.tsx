@@ -2,94 +2,9 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
-
-interface Testimonial {
-  id: string;
-  quote: string;
-  name: string;
-  role: string;
-  avatar: string;
-  index: string;
-}
-
-interface Service {
-  id: string;
-  title: string;
-  image: string;
-  video?: string;
-}
-
-const TESTIMONIALS: Testimonial[] = [
-  {
-    id: "mammoth-murals",
-    quote:
-      "For years, our website struggled to showcase our work effectively and attract the right clients. Within just 30 days of launching the new site with MONOLOG, we generated $100k in new sales and receive 2-3 qualified inquiries every week.",
-    name: "Andrew Tynes",
-    role: "Owner, Mammoth Murals",
-    avatar: "/assets/AVIF/69ce9284075cd51831cdc1d1_1753282172963.avif",
-    index: "01/03",
-  },
-  {
-    id: "supersolid",
-    quote:
-      "Huy and his team are a rare collaborator who cares as much about “your thing.” Highly talented and humble, Huy is always willing to delve deeper to find the most interesting and elegant solution to the problem. We’d strongly recommend Huy to brands looking for a true web partner for their business.",
-    name: "Jonathon Shannon",
-    role: "Creative Director, Supersolid",
-    avatar: "/assets/AVIF/690df5490b74ae9f75ed17eb_Default.avif",
-    index: "02/03",
-  },
-  {
-    id: "oh-architecture",
-    quote:
-      "Since launching our new website, showcasing our completed work is far more streamlined. The design is not only impressive but innovative, it truly stands out. We've also seen a real shift in enquiry quality: 21% have converted into signed projects, and we're saving 3-5 hours a week previously lost to back-and-forth qualification. It's meant a stronger pipeline and a much more efficient client acquisition process.",
-    name: "Johnny Hyde",
-    role: "Director, OH Architecture",
-    avatar:
-      "/assets/AVIF/690df5543d7243082ccbfcaa_OH_STAFF©ANDYMACPHERSON-14 1.avif",
-    index: "03/03",
-  },
-];
-
-const SERVICES: Service[] = [
-  {
-    id: "brand-strategy",
-    title: "Brand Strategy",
-    image: "/assets/AVIF/697ef10d5fcc93485bf8dfb4_Brand Strategy.avif",
-    video: "/assets/WEBM/Strategy Compressed.webm",
-  },
-  {
-    id: "visual-identity",
-    title: "Visual Identity",
-    image: "/assets/AVIF/697ef16f889c1ea502d8ee65_Visual Identity.avif",
-  },
-  {
-    id: "website-strategy",
-    title: "Website Strategy",
-    image: "/assets/AVIF/697ef17ae082299197a3aa88_Website Strategy.avif",
-  },
-  {
-    id: "website-design",
-    title: "Website Design",
-    image: "/assets/AVIF/697ef15eca91ffc3ae831e4e_Web Design.avif",
-    video: "/assets/WEBM/Design FINAL compressed.webm",
-  },
-  {
-    id: "website-development",
-    title: "Website Development",
-    image: "/assets/AVIF/697ef13b8c2c03a57cff1df0_Webflow Development.avif",
-    video: "/assets/WEBM/Development Final Compressed.webm",
-  },
-  {
-    id: "3d-development",
-    title: "3D Development",
-    image: "/assets/AVIF/697ef14da1c89e5e19e5cca4_3D Development.avif",
-  },
-];
+import { gsap, useGSAP, MOTION_QUERY, prefersReducedMotion, useReducedMotion } from "@/lib/animation";
+import { SERVICES, PARTNER_PERSPECTIVES as TESTIMONIALS } from "@/lib/studio-data";
+import { StudioMedia } from "@/components/ui/studio-media";
 
 export function ServicesSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -104,91 +19,70 @@ export function ServicesSection() {
   const [activeService, setActiveService] = useState(0);
   const [isHoveringMenu, setIsHoveringMenu] = useState(false);
 
-  const changeSlide = useCallback((newIndex: number) => {
-    if (isTransitioningRef.current || newIndex === activeSlide) return;
-    isTransitioningRef.current = true;
+  const reducedMotion = useReducedMotion();
+  const cardMotionRef = useRef<{
+    y: ReturnType<typeof gsap.quickTo>;
+    rotateX: ReturnType<typeof gsap.quickTo>;
+    rotateY: ReturnType<typeof gsap.quickTo>;
+  } | null>(null);
+  const { contextSafe } = useGSAP({ scope: containerRef });
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        isTransitioningRef.current = false;
-      },
-    });
+  useGSAP(() => {
+    if (!cardRef.current) return;
+    const options = { duration: reducedMotion ? 0 : 0.55, ease: "power2.out" };
+    cardMotionRef.current = {
+      y: gsap.quickTo(cardRef.current, "y", options),
+      rotateX: gsap.quickTo(cardRef.current, "rotateX", options),
+      rotateY: gsap.quickTo(cardRef.current, "rotateY", options),
+    };
+    return () => { cardMotionRef.current = null; };
+  }, { scope: containerRef, dependencies: [reducedMotion], revertOnUpdate: true });
 
-    tl.to([quoteRef.current, authorRef.current], {
-      opacity: 0,
-      y: -8,
-      duration: 0.2,
-      ease: "power2.in",
-      stagger: 0.03,
-      onComplete: () => {
+  const changeSlide = (newIndex: number) => {
+    contextSafe(() => {
+      if (isTransitioningRef.current || newIndex === activeSlide) return;
+      if (prefersReducedMotion()) {
         setActiveSlide(newIndex);
-      },
-    });
-
-    tl.fromTo(
-      [quoteRef.current, authorRef.current],
-      { opacity: 0, y: 12 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.38,
-        ease: "power2.out",
-        stagger: 0.04,
+        return;
       }
-    );
-  }, [activeSlide]);
-
-  const prevSlide = () => {
-    changeSlide(activeSlide === 0 ? TESTIMONIALS.length - 1 : activeSlide - 1);
+      isTransitioningRef.current = true;
+      gsap.timeline({ onComplete: () => { isTransitioningRef.current = false; } })
+        .to([quoteRef.current, authorRef.current], {
+          opacity: 0, y: -8, duration: 0.2, ease: "power2.in", stagger: 0.03,
+          onComplete: () => { setActiveSlide(newIndex); },
+        })
+        .fromTo([quoteRef.current, authorRef.current], { opacity: 0, y: 12 }, {
+          opacity: 1, y: 0, duration: 0.38, ease: "power2.out", stagger: 0.04,
+        });
+    })();
   };
 
-  const nextSlide = () => {
-    changeSlide(activeSlide === TESTIMONIALS.length - 1 ? 0 : activeSlide + 1);
-  };
+  const prevSlide = () => changeSlide((activeSlide - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
+  const nextSlide = () => changeSlide((activeSlide + 1) % TESTIMONIALS.length);
 
   const updateCardPosition = useCallback((index: number) => {
-    if (!menuRef.current || !cardRef.current) return;
-    const targetItem = itemRefs.current[index];
-    if (!targetItem) return;
-
-    const menuRect = menuRef.current.getBoundingClientRect();
-    const itemRect = targetItem.getBoundingClientRect();
-    const cardHeight = cardRef.current.offsetHeight || 440;
-
-    const itemCenterY = itemRect.top - menuRect.top + itemRect.height / 2;
-    const maxTravel = Math.max(0, menuRect.height - cardHeight);
-    const targetY = Math.max(0, Math.min(maxTravel, itemCenterY - cardHeight / 2));
-
-    gsap.to(cardRef.current, {
-      y: targetY,
-      duration: 0.55,
-      ease: "power2.out",
-      overwrite: "auto",
-    });
+    const menu = menuRef.current;
+    const card = cardRef.current;
+    const item = itemRefs.current[index];
+    if (!menu || !card || !item) return;
+    const menuRect = menu.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    const center = itemRect.top - menuRect.top + itemRect.height / 2;
+    const travel = Math.max(0, menuRect.height - card.offsetHeight);
+    cardMotionRef.current?.y(Math.max(0, Math.min(travel, center - card.offsetHeight / 2)));
   }, []);
 
-  const handleMenuMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!menuRef.current || !cardRef.current) return;
-    const menuRect = menuRef.current.getBoundingClientRect();
-    const cardHeight = cardRef.current.offsetHeight || 440;
-    const mouseY = e.clientY - menuRect.top;
-    const mouseX = e.clientX - menuRect.left;
-    const maxTravel = Math.max(0, menuRect.height - cardHeight);
-    const ratioY = Math.max(0, Math.min(1, mouseY / menuRect.height));
-    const ratioX = Math.max(0, Math.min(1, mouseX / menuRect.width));
-    const targetY = ratioY * maxTravel;
-
-    const tiltX = (ratioY - 0.5) * -6;
-    const tiltY = (ratioX - 0.5) * 6;
-
-    gsap.to(cardRef.current, {
-      y: targetY,
-      rotateX: tiltX,
-      rotateY: tiltY,
-      duration: 0.5,
-      ease: "power2.out",
-      overwrite: "auto",
-    });
+  const handleMenuMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    const menu = menuRef.current;
+    const card = cardRef.current;
+    if (reducedMotion || !menu || !card) return;
+    const bounds = menu.getBoundingClientRect();
+    const ratioY = Math.max(0, Math.min(1, (event.clientY - bounds.top) / bounds.height));
+    const ratioX = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+    const motion = cardMotionRef.current;
+    motion?.y(ratioY * Math.max(0, bounds.height - card.offsetHeight));
+    motion?.rotateX((ratioY - 0.5) * -6);
+    motion?.rotateY((ratioX - 0.5) * 6);
   };
 
   const handleItemEnter = (index: number) => {
@@ -199,55 +93,55 @@ export function ServicesSection() {
 
   const handleMenuMouseLeave = () => {
     setIsHoveringMenu(false);
-    if (cardRef.current) {
-      gsap.to(cardRef.current, {
-        rotateX: 0,
-        rotateY: 0,
-        duration: 0.6,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
-    }
+    cardMotionRef.current?.rotateX(0);
+    cardMotionRef.current?.rotateY(0);
     updateCardPosition(activeService);
   };
 
   useEffect(() => {
-    updateCardPosition(activeService);
-  }, [activeService, updateCardPosition]);
+    const resize = () => updateCardPosition(activeService);
+    resize();
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+  }, [activeService, reducedMotion, updateCardPosition]);
 
   useGSAP(
     () => {
-      gsap.fromTo(
-        ".services-fade-in",
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.12,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 75%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
+      const media = gsap.matchMedia();
+      media.add(MOTION_QUERY, () => {
+        gsap.fromTo(
+          ".services-fade-in",
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.12,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top 75%",
+              once: true,
+            },
+          }
+        );
 
-      gsap.fromTo(
-        ".service-card-parallax-inner",
-        { yPercent: -10 },
-        {
-          yPercent: 10,
-          ease: "none",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1.2,
-          },
-        }
-      );
+        gsap.fromTo(
+          ".service-card-parallax-inner",
+          { yPercent: -10 },
+          {
+            yPercent: 10,
+            ease: "none",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1.2,
+            },
+          }
+        );
+      });
+      return () => media.revert();
     },
     { scope: containerRef }
   );
@@ -279,7 +173,7 @@ export function ServicesSection() {
                     key={idx}
                     type="button"
                     onClick={() => changeSlide(idx)}
-                    className="h-1 flex-1 py-2 cursor-pointer focus:outline-none"
+                    className="h-1 flex-1 py-2 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
                     aria-label={`Go to slide ${idx + 1}`}
                   >
                     <div
@@ -341,7 +235,7 @@ export function ServicesSection() {
               </div>
 
               <p className="font-mono text-[11px] uppercase tracking-widest text-white/40 mt-6 sm:mt-8">
-                (REAL CLIENT STORIES)
+                (PARTNER PERSPECTIVES)
               </p>
 
               <div className="mt-5 min-h-[190px] sm:min-h-[220px]">
@@ -361,7 +255,7 @@ export function ServicesSection() {
               <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white/15 bg-white/5">
                 <Image
                   src={currentTestimonial.avatar}
-                  alt={currentTestimonial.name}
+                  alt=""
                   fill
                   sizes="40px"
                   className="object-cover"
@@ -402,6 +296,18 @@ export function ServicesSection() {
                         itemRefs.current[index] = el;
                       }}
                       onMouseEnter={() => handleItemEnter(index)}
+                      onFocus={() => handleItemEnter(index)}
+                      onClick={() => handleItemEnter(index)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          handleItemEnter(index);
+                        }
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      aria-pressed={isActive}
+                      aria-label={`${service.title}. ${service.description}`}
                       className="group relative flex items-center cursor-pointer py-1.5"
                     >
                       <h2
@@ -441,28 +347,12 @@ export function ServicesSection() {
                     }`}
                   >
                     <div className="service-card-parallax-inner absolute -inset-y-[12%] inset-x-0 w-full h-[124%] will-change-transform">
-                      <Image
-                        src={service.image}
-                        alt={service.title}
-                        fill
+                      <StudioMedia
+                        image={service.image}
+                        video={service.video}
+                        enabled={isActive}
                         sizes="(max-width: 1200px) 35vw, 440px"
-                        className="object-cover"
-                        priority={index === 0}
                       />
-
-                      {service.video && (
-                        <video
-                          src={service.video}
-                          autoPlay
-                          muted
-                          loop
-                          playsInline
-                          preload="metadata"
-                          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
-                            isActive ? "opacity-100" : "opacity-0"
-                          }`}
-                        />
-                      )}
                     </div>
                   </div>
                 );

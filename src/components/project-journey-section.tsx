@@ -1,11 +1,9 @@
 "use client";
 
 import React, { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { gsap, useGSAP, MOTION_QUERY } from "@/lib/animation";
+import { STUDIO } from "@/lib/studio-data";
+import { StudioMedia } from "@/components/ui/studio-media";
 
 interface ProcessStep {
   id: string;
@@ -13,6 +11,7 @@ interface ProcessStep {
   title: string;
   description: string;
   video: string;
+  image: string;
   link: string;
 }
 
@@ -20,29 +19,32 @@ const STEPS: ProcessStep[] = [
   {
     id: "step-1",
     number: "01",
-    title: "We uncover your story",
+    title: "We discover the possibility",
     description:
-      "We dig deep into your brand, surface what makes you irreplaceable, and shape it into sharp positioning and a website strategy that connects in seconds.",
+      "We explore your vision, creative goals, and technical requirements. Together, we shape an original concept, map the experience, and agree on clear milestones.",
     video: "/assets/WEBM/Strategy Compressed.webm",
-    link: "https://youtu.be/LVOLFgSqHQ0?si=ilDSUJZ8q4J_05Ou&t=76",
+    image: "/assets/AVIF/697ef17ae082299197a3aa88_Website Strategy.avif",
+    link: STUDIO.contact,
   },
   {
     id: "step-2",
     number: "02",
-    title: "We shape your digital presence",
+    title: "We design and engineer",
     description:
-      "With your narrative locked, we design and direct a brand and website that feels premium, signals credibility, and gives your audience one clear reason to lean in and act.",
+      "Creative direction meets bespoke engineering. We prototype the interactions, craft the 3D and motion systems, and build a modular digital product through collaborative iteration.",
     video: "/assets/WEBM/Design FINAL compressed.webm",
-    link: "https://youtu.be/LVOLFgSqHQ0?si=V8p7IBYcyDvXfcSM&t=480",
+    image: "/assets/AVIF/697ef16f889c1ea502d8ee65_Visual Identity.avif",
+    link: STUDIO.contact,
   },
   {
     id: "step-3",
     number: "03",
-    title: "We send it into the world",
+    title: "We launch and evolve",
     description:
-      "Your brand and website goes live as a long-term asset that turns attention into opportunity, attracts the clients you're built for, and grows with you.",
+      "We test performance, accessibility, and device behavior before launch. Your team receives the source code and assets, with ongoing evolution and support shaped around your partnership.",
     video: "/assets/WEBM/Development Final Compressed.webm",
-    link: "https://youtu.be/LVOLFgSqHQ0?si=P7382hcVSsMWaHtP&t=696",
+    image: "/assets/AVIF/697ef13b8c2c03a57cff1df0_Webflow Development.avif",
+    link: STUDIO.contact,
   },
 ];
 
@@ -51,44 +53,48 @@ export function ProjectJourneySection() {
 
   useGSAP(
     () => {
-      const stepItems = gsap.utils.toArray<HTMLElement>(".process-step-item");
-      stepItems.forEach((item) => {
-        const videoInner = item.querySelector<HTMLElement>(
-          ".process-video-parallax"
-        );
-        if (videoInner) {
+      const media = gsap.matchMedia();
+      media.add(MOTION_QUERY, () => {
+        const stepItems = gsap.utils.toArray<HTMLElement>(".process-step-item");
+        stepItems.forEach((item) => {
+          const videoInner = item.querySelector<HTMLElement>(
+            ".process-video-parallax"
+          );
+          if (videoInner) {
+            gsap.fromTo(
+              videoInner,
+              { yPercent: -10 },
+              {
+                yPercent: 10,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: item,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: 1.2,
+                },
+              }
+            );
+          }
+
           gsap.fromTo(
-            videoInner,
-            { yPercent: -14 },
+            item,
+            { opacity: 0.85, y: 20 },
             {
-              yPercent: 14,
-              ease: "none",
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "power2.out",
               scrollTrigger: {
                 trigger: item,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 1.2,
+                start: "top 82%",
+                once: true,
               },
             }
           );
-        }
-
-        gsap.fromTo(
-          item,
-          { opacity: 0.85, y: 20 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: item,
-              start: "top 82%",
-              toggleActions: "play none none reverse",
-            },
-          }
-        );
+        });
       });
+      return () => media.revert();
     },
     { scope: containerRef }
   );
@@ -202,19 +208,14 @@ export function ProjectJourneySection() {
                 <div className="lg:col-span-6">
                   <a
                     href={step.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    aria-label={`Discuss how we ${step.title.replace("We ", "").toLowerCase()}`}
                     className="group relative block w-full aspect-[16/10] overflow-hidden rounded-lg sm:rounded-xl bg-[#181817] border border-white/10 shadow-xl shadow-black/80 cursor-pointer"
                   >
                     <div className="process-video-parallax absolute -inset-y-[18%] inset-x-0 w-full h-[136%] will-change-transform">
-                      <video
-                        src={step.video}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="metadata"
-                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                      <StudioMedia
+                        image={step.image}
+                        video={step.video}
+                        sizes="(min-width: 1024px) 50vw, 100vw"
                       />
                     </div>
 

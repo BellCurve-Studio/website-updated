@@ -2,64 +2,9 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import { gsap, ScrollTrigger, useGSAP, MOTION_QUERY, prefersReducedMotion } from "@/lib/animation";
+import { QUESTIONS } from "@/lib/studio-data";
 import { StudioCta } from "@/components/ui/studio-cta";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
-
-const QUESTIONS = [
-  {
-    question: "Who will actually be working on our project?",
-    answer: [
-      "Huy is your creative lead and main contact, from the first strategy session to launch.",
-      "A team of specialist designers and developers joins according to your project’s needs.",
-    ],
-  },
-  {
-    question: "How long do your projects usually take?",
-    answer: [
-      "Typically, 10–14 weeks from discovery to launch.",
-      "We agree on the schedule and key milestones together before work begins.",
-    ],
-  },
-  {
-    question: "How do you communicate and manage work?",
-    answer: [
-      "Your Notion workspace keeps deliverables and deadlines in one place.",
-      "Expect Loom updates, weekly Slack or WhatsApp check-ins, and calls for key decisions.",
-    ],
-  },
-  {
-    question: "What do you need to start working together?",
-    answer: [
-      "First, a conversation about your ambitions. Then, a proposal shaped around your needs.",
-      "A signed agreement and initial deposit secure your project and begin onboarding.",
-    ],
-  },
-  {
-    question: "What happens after launch?",
-    answer: [
-      "You get 90 days of support, documentation, and CMS training.",
-      "Manage your website confidently in-house, or choose an ongoing care plan.",
-    ],
-  },
-  {
-    question: "Can you handle branding, design and development?",
-    answer: [
-      "Yes. Strategy, identity, design, and development happen together.",
-      "One team connects your story to every part of the experience.",
-    ],
-  },
-  {
-    question: "What is the project investment?",
-    answer: [
-      "Projects start at $20,000 USD. Most fall between $25,000 and $50,000.",
-      "Your proposal sets out the investment for your scope and complexity.",
-    ],
-  },
-];
 
 function FaqItem({
   item,
@@ -83,7 +28,7 @@ function FaqItem({
       gsap.to(panel, {
         height: expanded ? "auto" : 0,
         opacity: expanded ? 1 : 0,
-        duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 0.45,
+        duration: prefersReducedMotion() ? 0 : 0.45,
         ease: "power3.inOut",
         overwrite: true,
         onComplete: () => ScrollTrigger.refresh(),
@@ -132,7 +77,7 @@ export function FaqSection() {
   useGSAP(
     () => {
       const media = gsap.matchMedia();
-      media.add("(prefers-reduced-motion: no-preference)", () => {
+      media.add(MOTION_QUERY, () => {
         gsap.from(".faq-heading", {
           y: 30,
           opacity: 0,
@@ -187,8 +132,8 @@ export function FaqSection() {
         <aside className="flex flex-col items-start gap-5 border-t border-white/15 pt-8 min-[380px]:flex-row min-[380px]:items-center sm:gap-7 lg:col-start-1 lg:row-start-2 lg:flex-col lg:items-start lg:justify-end lg:gap-6 lg:self-end lg:border-0 lg:pt-0">
           <div className="relative aspect-square w-24 shrink-0 overflow-hidden rounded-xs sm:w-32 lg:w-40">
             <Image
-              src="/assets/AVIF/6a092d5259ca7aa33208cde1_DSCF2544 copy-p-500.avif"
-              alt="Huy Nguyen, founder of Monolog"
+              src="/assets/AVIF/697ef14da1c89e5e19e5cca4_3D Development-p-500.avif"
+              alt=""
               fill
               sizes="(min-width: 1024px) 160px, (min-width: 640px) 128px, 96px"
               className="object-cover object-[center_35%]"
@@ -198,7 +143,7 @@ export function FaqSection() {
             <p className="mb-4 max-w-[270px] text-lg leading-tight font-bold tracking-tight text-[#a7a7a0] sm:text-2xl lg:mb-6">
               Would like to know<br className="hidden lg:block" /> if we&apos;d be a good fit?
             </p>
-            <StudioCta className="gap-2 text-xs sm:text-sm lg:text-base">Book a call with Huy</StudioCta>
+            <StudioCta className="gap-2 text-xs sm:text-sm lg:text-base">Book Consultation</StudioCta>
           </div>
         </aside>
       </div>
