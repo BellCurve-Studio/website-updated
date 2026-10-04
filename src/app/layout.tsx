@@ -51,8 +51,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BellCurve Studios — Crafting Immersive Digital Experiences",
-  description: `${STUDIO.description} Bespoke WebGL/WebGPU engineering, fluid GSAP motion, procedural 3D art, and high-performance digital products.`,
+  title: "BellCurve Studio — Software that fits the way you work",
+  description: `${STUDIO.description} Start with a free basic audit to find your next useful improvement.`,
 };
 
 export default function RootLayout({

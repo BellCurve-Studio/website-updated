@@ -39,9 +39,9 @@ export function parallaxMedia(target: Element | string, trigger: Element | strin
   });
 }
 
-export function revealElements(scope: Element | null) {
+export function revealElements(scope: Element | null, selector = ".section-reveal") {
   if (!scope) return;
-  gsap.utils.toArray<HTMLElement>(".section-reveal", scope).forEach((element) => {
+  gsap.utils.toArray<HTMLElement>(selector, scope).forEach((element) => {
     gsap.from(element, {
       y: 22,
       autoAlpha: 0,

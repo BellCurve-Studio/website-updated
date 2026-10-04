@@ -5,25 +5,6 @@ import { gsap, useGSAP, MOTION_QUERY, parallaxMedia } from "@/lib/animation";
 import { PROJECTS, STUDIO, type StudioProject } from "@/lib/studio-data";
 import { StudioMedia } from "@/components/ui/studio-media";
 
-function AwardBadge() {
-  return (
-    <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[#f0c2c2] bg-[#fbf1f1] text-[#c94b4b] shadow-xs shrink-0">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="h-3.5 w-3.5"
-      >
-        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-      </svg>
-    </div>
-  );
-}
-
 function ProjectCard({ project }: { project: StudioProject }) {
   const [isHovered, setIsHovered] = useState(false);
   const handleMouseEnter = () => setIsHovered(true);
@@ -70,7 +51,6 @@ function ProjectCard({ project }: { project: StudioProject }) {
                   </span>
                 </div>
 
-                {project.hasAwardBadge && <AwardBadge />}
               </div>
 
               <h3 className="text-2xl sm:text-[26px] lg:text-[28px] font-bold tracking-tight text-[#141414] leading-snug group-hover:text-black/75 transition-colors duration-300">
@@ -159,7 +139,7 @@ export function SuccessStoriesSection() {
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-[#7a7a75]" />
               <span className="text-[14px] font-medium tracking-tight text-[#141414]">
-                Selected Works
+                Ways we can help
               </span>
             </div>
           </div>
@@ -178,14 +158,14 @@ export function SuccessStoriesSection() {
               <div className="flex items-center gap-2.5 font-mono text-xs text-black/60 tracking-wider">
                 <span className="font-semibold text-black/80">06</span>
                 <span>/</span>
-                <span>SELECTED ARCHIVE</span>
+                <span>POSSIBLE STARTING POINTS</span>
               </div>
 
               <a
                 href={STUDIO.contact}
                 className="group inline-flex items-center gap-2.5 rounded-full bg-[#141414] px-5 py-2.5 text-xs sm:text-sm font-semibold text-[#f5f5f0] shadow-xs transition-all duration-300 hover:bg-black hover:scale-[1.02] w-fit"
               >
-                <span>Start a Project</span>
+                <span>Discuss your situation</span>
                 <span className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5 font-mono text-xs">
                   ↗
                 </span>

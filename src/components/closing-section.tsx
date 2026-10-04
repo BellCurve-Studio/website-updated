@@ -6,37 +6,15 @@ import { gsap, ScrollTrigger, useGSAP, MOTION_QUERY, prefersReducedMotion, revea
 import { STUDIO, SOCIALS } from "@/lib/studio-data";
 import { StudioWordmark } from "@/components/ui/studio-wordmark";
 import { useLenis } from "lenis/react";
+import { ContactSection } from "@/components/contact-section";
 import { StudioCta } from "@/components/ui/studio-cta";
 
 const FOOTER_LINKS = [
-  { label: "Work", href: "#work" },
+  { label: "Solutions", href: "#work" },
   { label: "Services", href: "#services" },
   { label: "Process", href: "#process" },
   { label: "FAQs", href: "#faq" },
 ];
-
-function AwardMark({ name }: { name: "FWA" | "CSSDesignAwards" | "Awwwards" }) {
-  const isAwwwards = name === "Awwwards";
-
-  return (
-    <div role="img" aria-label={`${name} Site of the Day awards`} className="relative aspect-[593/322] w-full">
-      <Image
-        src="/assets/SVG/cta_home_svgs.svg"
-        alt=""
-        fill
-        className={isAwwwards ? "invert" : "invert [clip-path:polygon(0_0,30%_0,30%_35%,18%_35%,18%_65%,30%_65%,30%_100%,0_100%)]"}
-      />
-      {!isAwwwards && (
-        <>
-          <Image src="/assets/SVG/cta_home_svgs.svg" alt="" fill className="invert [clip-path:polygon(70%_0,100%_0,100%_100%,70%_100%,70%_65%,82%_65%,82%_35%,70%_35%)]" />
-          <span className={`absolute inset-0 flex items-center justify-center ${name === "FWA" ? "font-heading text-[clamp(1.5rem,3.5vw,3.5rem)] tracking-[-0.04em]" : "text-[clamp(0.5rem,0.9vw,0.8rem)] font-semibold"}`}>
-            {name === "FWA" ? "FWA" : "CSSDesignAwards"}
-          </span>
-        </>
-      )}
-    </div>
-  );
-}
 
 export function ClosingSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -101,7 +79,7 @@ export function ClosingSection() {
 
   return (
     <div ref={containerRef} className="relative z-10 bg-[#0d0d0d] text-[#f0f0eb] selection:bg-[#f0f0eb] selection:text-[#141414]">
-      <section id="contact" aria-labelledby="closing-heading" className="closing-scene relative isolate overflow-clip">
+      <section id="next-step" aria-labelledby="closing-heading" className="closing-scene relative isolate overflow-clip">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20">
           <div className="sticky top-0 h-screen overflow-hidden">
             <div className="closing-photo absolute -inset-y-[7%] inset-x-0">
@@ -120,44 +98,44 @@ export function ClosingSection() {
 
         <div className="mx-auto flex min-h-[85svh] max-w-[1640px] flex-col items-center justify-center px-6 py-24 sm:min-h-screen sm:px-10 sm:py-16 lg:px-14">
           <h2 id="closing-heading" className="closing-title w-full max-w-[1280px] text-[clamp(2.6rem,13.8vw,5.5rem)] leading-[0.91] tracking-[-0.025em] uppercase sm:text-[clamp(5.5rem,10.6vw,11.5rem)]">
-            <span className="block overflow-hidden pb-[0.06em] pl-[3%] sm:pl-[14%]"><span className="closing-title-line block">Let&apos;s build</span></span>
-            <span className="block overflow-hidden pb-[0.06em] pl-[8%] sm:pl-[22%]"><span className="closing-title-line block">an experience</span></span>
-            <span className="block overflow-hidden pb-[0.06em] sm:pl-[10%]"><span className="closing-title-line block">that moves</span></span>
+            <span className="block overflow-hidden pb-[0.06em] pl-[3%] sm:pl-[14%]"><span className="closing-title-line block">Let&apos;s make</span></span>
+            <span className="block overflow-hidden pb-[0.06em] pl-[8%] sm:pl-[22%]"><span className="closing-title-line block">the way</span></span>
+            <span className="block overflow-hidden pb-[0.06em] sm:pl-[10%]"><span className="closing-title-line block">you work</span></span>
             <span className="block overflow-hidden pb-[0.06em] pl-[23%] sm:pl-[38%]">
-              <span className="closing-title-line flex items-center gap-[0.15em]"><span aria-hidden="true" className="font-sans text-[0.85em]">→</span> people</span>
+              <span className="closing-title-line flex items-center gap-[0.15em]"><span aria-hidden="true" className="font-sans text-[0.85em]">→</span> better</span>
             </span>
           </h2>
           <StudioCta className="closing-main-cta mt-14 gap-4 p-2 pl-4 text-[clamp(1.35rem,2.8vw,3rem)] leading-tight sm:mt-20 sm:gap-5 sm:p-3 sm:pl-5 [&>span:last-child]:size-11 sm:[&>span:last-child]:size-14 [&_img]:size-8 sm:[&_img]:size-10">
-            Start a Project
+            Tell us what’s happening
           </StudioCta>
         </div>
 
         <div className="closing-recognition mx-auto flex min-h-[65svh] max-w-[850px] flex-col items-center justify-center px-6 pt-12 pb-28 sm:px-10 sm:pt-16 sm:pb-40">
           <div className="mb-9 grid w-full grid-cols-3 items-center gap-3 sm:mb-12 sm:gap-5">
-            <AwardMark name="FWA" />
-            <AwardMark name="CSSDesignAwards" />
-            <AwardMark name="Awwwards" />
+            {["Digital experiences", "Business systems", "Automation & AI"].map((service) => <span key={service} className="flex min-h-24 items-center justify-center border-y border-white/25 px-2 text-center text-sm font-semibold sm:min-h-32 sm:text-lg">{service}</span>)}
           </div>
           <figure className="max-w-[510px] text-center">
             <blockquote className="text-xl leading-tight font-bold tracking-tight sm:text-2xl lg:text-[28px]">
-              &ldquo;Purpose-built to deliver unforgettable digital experiences and elevate brands beyond the ordinary.&rdquo;
+              &ldquo;Software should fit the business. Not the other way around.&rdquo;
             </blockquote>
-            <figcaption className="mt-7 font-mono text-[10px] tracking-wide text-white/65 uppercase sm:mt-10 sm:text-xs">— BellCurve Studios</figcaption>
+            <figcaption className="mt-7 font-mono text-[10px] tracking-wide text-white/65 uppercase sm:mt-10 sm:text-xs">— BellCurve Studio</figcaption>
           </figure>
         </div>
       </section>
+
+      <ContactSection />
 
       <footer className="px-6 pt-16 pb-7 sm:px-10 sm:pt-24 lg:px-14 xl:px-18">
         <div className="mx-auto max-w-[1640px]">
           <div className="grid grid-cols-1 gap-12 border-b border-white/15 pb-16 sm:grid-cols-2 lg:grid-cols-3 lg:gap-20">
             <div className="section-reveal">
-              <a href="#" onClick={(event) => { event.preventDefault(); scrollToTop(); }} aria-label="BellCurve Studios home" className="inline-block focus-visible:outline-2 focus-visible:outline-offset-6">
+              <a href="#" onClick={(event) => { event.preventDefault(); scrollToTop(); }} aria-label="BellCurve Studio home" className="inline-block focus-visible:outline-2 focus-visible:outline-offset-6">
                 <StudioWordmark className="[&>span:first-child]:text-[34px]" />
               </a>
-              <p className="mt-6 max-w-[260px] text-sm leading-relaxed text-white/55">Bespoke creative technology.<br />Immersive digital experiences.</p>
+              <p className="mt-6 max-w-[260px] text-sm leading-relaxed text-white/55">Digital experiences. Business systems.<br />Automation that makes work easier.</p>
               <div className="mt-7 flex flex-wrap gap-3 font-mono text-[9px] text-white/65">
-                <span className="rounded-xs border border-white/20 px-2 py-2">ISO 27001 Certified</span>
-                <span className="rounded-xs border border-white/20 px-2 py-2">AICPA SOC Certified</span>
+                <span className="rounded-xs border border-white/20 px-2 py-2">Problem-first</span>
+                <span className="rounded-xs border border-white/20 px-2 py-2">Built to fit</span>
               </div>
             </div>
             <div className="section-reveal">
@@ -184,8 +162,8 @@ export function ClosingSection() {
             </div>
           </div>
           <div className="flex flex-col gap-5 pt-7 text-[10px] text-white/45 sm:flex-row sm:items-center sm:justify-between sm:text-xs">
-            <p className="font-mono">© {new Date().getFullYear()} BellCurve Studios</p>
-            <p className="font-medium">Founded by Piyush Yadav. Delhi NCR, India.</p>
+            <p className="font-mono">© {new Date().getFullYear()} BellCurve Studio</p>
+            <p className="font-medium">Start with the problem. We’ll take it from there.</p>
             <button type="button" onClick={scrollToTop} className="min-h-11 w-fit cursor-pointer text-sm font-semibold text-[#f0f0eb] hover:text-white/60 focus-visible:outline-2 focus-visible:outline-offset-4">Back to top ↑</button>
           </div>
         </div>

@@ -177,7 +177,7 @@ export function ServicesSection() {
                   <button
                     type="button"
                     onClick={prevSlide}
-                    aria-label="Previous story"
+                    aria-label="Previous principle"
                     className="p-1 hover:text-white transition-colors cursor-pointer"
                   >
                     <svg
@@ -197,7 +197,7 @@ export function ServicesSection() {
                   <button
                     type="button"
                     onClick={nextSlide}
-                    aria-label="Next story"
+                    aria-label="Next principle"
                     className="p-1 hover:text-white transition-colors cursor-pointer"
                   >
                     <svg
@@ -222,7 +222,7 @@ export function ServicesSection() {
               </div>
 
               <p className="font-mono text-[11px] uppercase tracking-widest text-white/40 mt-6 sm:mt-8">
-                (PARTNER PERSPECTIVES)
+                (HOW WE THINK)
               </p>
 
               <div className="mt-5 min-h-[190px] sm:min-h-[220px]">

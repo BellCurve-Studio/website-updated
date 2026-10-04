@@ -100,9 +100,9 @@ export function FaqSection() {
         </div>
         <div className="min-w-0 lg:col-span-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
           <h2 id="faq-heading" className="faq-heading mb-12 max-w-[1040px] text-[clamp(2.25rem,4.8vw,5.5rem)] leading-[1.06] font-bold tracking-[-0.055em] sm:mb-16 lg:mb-18">
-            <span className="sm:block">Here&apos;s what you need </span>
-            <span className="sm:block">to consider before </span>
-            <span className="sm:block">partnering with us.</span>
+            <span className="sm:block">A few things to know </span>
+            <span className="sm:block">before we start </span>
+            <span className="sm:block">working together.</span>
           </h2>
           <div className="faq-list border-b border-dotted border-white/20">
             {QUESTIONS.map((item, index) => (
@@ -130,7 +130,7 @@ export function FaqSection() {
             <p className="mb-4 max-w-[270px] text-lg leading-tight font-bold tracking-tight text-[#a7a7a0] sm:text-2xl lg:mb-6">
               Wondering if<br className="hidden lg:block" /> we&apos;re a good fit?
             </p>
-            <StudioCta className="gap-2 text-xs sm:text-sm lg:text-base">Book Consultation</StudioCta>
+            <StudioCta className="gap-2 text-xs sm:text-sm lg:text-base">Start a conversation</StudioCta>
           </div>
         </aside>
       </div>

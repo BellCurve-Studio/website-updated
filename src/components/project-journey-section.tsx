@@ -19,9 +19,9 @@ const STEPS: ProcessStep[] = [
   {
     id: "step-1",
     number: "01",
-    title: "We discover the possibility",
+    title: "We understand and diagnose",
     description:
-      "We explore your vision, creative goals, and technical requirements. Together, we shape an original concept, map the experience, and agree on clear milestones.",
+      "We listen to what is not working, audit your current setup, and diagnose the gaps. Before discussing a solution, we agree on the problem worth solving.",
     video: "/assets/WEBM/Strategy Compressed.webm",
     image: "/assets/AVIF/697ef17ae082299197a3aa88_Website Strategy.avif",
     link: STUDIO.contact,
@@ -29,9 +29,9 @@ const STEPS: ProcessStep[] = [
   {
     id: "step-2",
     number: "02",
-    title: "We design and engineer",
+    title: "We design and agree the scope",
     description:
-      "Creative direction meets bespoke engineering. We prototype the interactions, craft the 3D and motion systems, and build a modular digital product through collaborative iteration.",
+      "We design the approach around your team and tools. You get a clear scope, practical priorities, and an agreed plan before implementation begins.",
     video: "/assets/WEBM/Design FINAL compressed.webm",
     image: "/assets/AVIF/697ef16f889c1ea502d8ee65_Visual Identity.avif",
     link: STUDIO.contact,
@@ -39,9 +39,9 @@ const STEPS: ProcessStep[] = [
   {
     id: "step-3",
     number: "03",
-    title: "We launch and evolve",
+    title: "We build and improve",
     description:
-      "We test performance, accessibility, and device behavior before launch. Your team receives the source code and assets, with ongoing evolution and support shaped around your partnership.",
+      "We build, test, and introduce the solution into your workflow. Once it is in use, we review the outcome together and agree where further improvement or support is useful.",
     video: "/assets/WEBM/Development Final Compressed.webm",
     image: "/assets/AVIF/697ef13b8c2c03a57cff1df0_Webflow Development.avif",
     link: STUDIO.contact,

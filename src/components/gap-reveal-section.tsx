@@ -38,18 +38,18 @@ export function GapRevealSection() {
   return (
     <section id="direction" ref={containerRef} aria-labelledby="direction-heading" className="relative flex min-h-[85svh] flex-col justify-center overflow-clip border-t border-white/10 bg-[#121212] py-20 text-[#f0f0eb] lg:min-h-screen lg:py-12">
       <div className="studio-shell gap-content">
-        <p className="section-label mb-12 text-center lg:mb-16">Bespoke creative technology</p>
-        <h2 id="direction-heading" className="sr-only">Beyond ordinary. Creative engineering for visionary brands.</h2>
-        <div aria-hidden="true" className="flex flex-col items-center justify-center gap-6 lg:flex-row lg:gap-7">
-          <span className="gap-word-left font-heading text-[clamp(4rem,8.5vw,9.5rem)] leading-none tracking-tight">BEYOND</span>
-          <div className="gap-media relative aspect-[16/10] w-full max-w-[380px] overflow-hidden rounded-lg border border-white/15 bg-[#202020] lg:aspect-[3/4] lg:w-[22%] lg:max-w-[270px]">
+        <p className="section-label mb-12 text-center lg:mb-16">Software that fits your business</p>
+        <h2 id="direction-heading" className="sr-only">Less friction. More progress. Systems built around the way you work.</h2>
+        <div aria-hidden="true" className="flex flex-col items-center justify-center gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_clamp(180px,21vw,270px)_minmax(0,1fr)] lg:gap-7">
+          <span className="gap-word-left font-heading text-[clamp(4rem,8.5vw,9.5rem)] leading-none tracking-tight lg:justify-self-end lg:text-[clamp(4rem,7.5vw,9.5rem)]">LESS</span>
+          <div className="gap-media relative aspect-[16/10] w-full max-w-[380px] overflow-hidden rounded-lg border border-white/15 bg-[#202020] lg:aspect-[3/4] lg:max-w-[270px]">
             {FILMS.map((film, index) => <div key={film.title} className={`gap-film-${index} absolute inset-0 ${index === 0 ? "" : "invisible opacity-0"}`}><StudioMedia image={film.image} video={film.video} enabled={activeFilm === index} sizes="(min-width:1024px) 25vw, 85vw" /></div>)}
           </div>
-          <span className="gap-word-right font-heading text-[clamp(4rem,8.5vw,9.5rem)] leading-none tracking-tight">ORDINARY.</span>
+          <span className="gap-word-right font-heading text-[clamp(4rem,8.5vw,9.5rem)] leading-none tracking-tight lg:justify-self-start lg:text-[clamp(4rem,7.5vw,9.5rem)]">FRICTION.</span>
         </div>
         <div className="mx-auto mt-12 grid max-w-[940px] grid-cols-1 gap-8 border-t border-white/15 pt-7 sm:grid-cols-2 lg:mt-16">
-          <p className="text-base leading-relaxed font-semibold sm:text-lg">Your story deserves something original.<br /><span className="text-white/50">Considered from the first idea to the final detail.</span></p>
-          <p className="text-sm leading-relaxed text-white/55">We combine expressive design, thoughtful motion, and meticulous craft to create an experience that feels distinctly yours.</p>
+          <p className="text-base leading-relaxed font-semibold sm:text-lg">Your tools should help work move.<br /><span className="text-white/50">Not add another step to the process.</span></p>
+          <p className="text-sm leading-relaxed text-white/55">An enquiry, a record, a handoff. We connect the small gaps that slow your team down, so the next step is easier to see and act on.</p>
         </div>
       </div>
     </section>

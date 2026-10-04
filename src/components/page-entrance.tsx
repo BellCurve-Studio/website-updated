@@ -47,6 +47,11 @@ export function PageEntrance({ children }: { children: ReactNode }) {
     if (!hydrated) return;
     if (complete) {
       ScrollTrigger.refresh();
+      const anchor = document.getElementById(window.location.hash.slice(1));
+      if (anchor) {
+        if (lenis) lenis.scrollTo(anchor, { immediate: true });
+        else anchor.scrollIntoView();
+      }
       return;
     }
     const overflow = document.documentElement.style.overflow;
