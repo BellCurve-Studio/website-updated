@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { gsap, ScrollTrigger, useGSAP, MOTION_QUERY, prefersReducedMotion } from "@/lib/animation";
+import { gsap, ScrollTrigger, useGSAP, MOTION_QUERY, prefersReducedMotion, revealElements } from "@/lib/animation";
 import { STUDIO, SOCIALS } from "@/lib/studio-data";
 import { StudioWordmark } from "@/components/ui/studio-wordmark";
 import { useLenis } from "lenis/react";
@@ -66,6 +66,8 @@ export function ClosingSection() {
           ease: "power3.out",
           scrollTrigger: { trigger: ".closing-recognition", start: "top 88%", once: true },
         });
+
+        revealElements(containerRef.current);
 
         const cleanups = gsap.utils.toArray<HTMLAnchorElement>(".studio-cta").map((button) => {
           const arrow = button.querySelector(".studio-cta-arrow");
@@ -148,7 +150,7 @@ export function ClosingSection() {
       <footer className="px-6 pt-16 pb-7 sm:px-10 sm:pt-24 lg:px-14 xl:px-18">
         <div className="mx-auto max-w-[1640px]">
           <div className="grid grid-cols-1 gap-12 border-b border-white/15 pb-16 sm:grid-cols-2 lg:grid-cols-3 lg:gap-20">
-            <div>
+            <div className="section-reveal">
               <a href="#" onClick={(event) => { event.preventDefault(); scrollToTop(); }} aria-label="BellCurve Studios home" className="inline-block focus-visible:outline-2 focus-visible:outline-offset-6">
                 <StudioWordmark className="[&>span:first-child]:text-[34px]" />
               </a>
@@ -158,7 +160,7 @@ export function ClosingSection() {
                 <span className="rounded-xs border border-white/20 px-2 py-2">AICPA SOC Certified</span>
               </div>
             </div>
-            <div>
+            <div className="section-reveal">
               <p className="mb-5 font-mono text-xs text-white/45 uppercase">Navigation</p>
               <nav aria-label="Footer navigation" className="grid grid-cols-2 gap-x-8 gap-y-3 text-lg font-semibold">
                 {FOOTER_LINKS.map((link) => (
@@ -172,7 +174,7 @@ export function ClosingSection() {
                 <a href={STUDIO.contact} className="flex items-center justify-between gap-3 hover:text-white/60 focus-visible:outline-2 focus-visible:outline-offset-4">Contact<span aria-hidden="true">↗</span></a>
               </nav>
             </div>
-            <div className="sm:col-span-2 lg:col-span-1">
+            <div className="section-reveal sm:col-span-2 lg:col-span-1">
               <p className="mb-5 font-mono text-xs text-white/45 uppercase">Studio details</p>
               <a href={`mailto:${STUDIO.email}`} className="break-all text-xl font-semibold tracking-tight hover:text-white/60 focus-visible:outline-2 focus-visible:outline-offset-4">{STUDIO.email} ↗</a>
               <p className="mt-4 text-sm leading-relaxed text-white/55">Based in Delhi NCR, India.<br />Working worldwide.</p>

@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { gsap, ScrollTrigger, useGSAP, MOTION_QUERY, prefersReducedMotion } from "@/lib/animation";
+import { AnimatePresence, motion } from "framer-motion";
+import { usePageReady } from "@/components/page-entrance";
+import { gsap, ScrollTrigger, useGSAP, MOTION_QUERY, prefersReducedMotion, useReducedMotion } from "@/lib/animation";
 import { STUDIO, PROJECTS } from "@/lib/studio-data";
 import { StudioCta } from "@/components/ui/studio-cta";
 import { StudioMedia } from "@/components/ui/studio-media";
@@ -12,6 +14,8 @@ const NAVIGATION = [{ label: "Studio", href: "#about" }, { label: "Works", href:
 
 export function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const ready = usePageReady();
+  const reducedMotion = useReducedMotion();
   const audioRef = useRef<AudioContext | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -43,11 +47,31 @@ export function HeroSection() {
   useGSAP(() => {
     const media = gsap.matchMedia();
     media.add(MOTION_QUERY, () => {
+      if (!ready) {
+        gsap.set(".hero-nav, .hero-intro, .hero-visual-card", { autoAlpha: 0 });
+        gsap.set(".hero-title-line", { yPercent: 105 });
+        return;
+      }
       gsap.timeline({ defaults: { ease: "power3.out" } })
         .from(".hero-nav", { y: -12, autoAlpha: 0, duration: 0.7 })
         .from(".hero-title-line", { yPercent: 105, duration: 1.05, stagger: 0.09 }, "-=0.35")
         .from(".hero-intro", { y: 20, autoAlpha: 0, duration: 0.85 }, "-=0.8")
         .from(".hero-visual-card", { y: 28, autoAlpha: 0, duration: 1 }, "-=0.6");
+    });
+    return () => media.revert();
+  }, { scope: containerRef, dependencies: [ready], revertOnUpdate: true });
+
+  useGSAP(() => {
+    const media = gsap.matchMedia();
+    media.add(MOTION_QUERY, () => {
+      gsap.fromTo(".hero-media-parallax", { yPercent: -5 }, {
+        yPercent: 5, ease: "none",
+        scrollTrigger: { trigger: ".hero-visual-card", start: "clamp(top bottom)", end: "bottom top", scrub: 0.65, invalidateOnRefresh: true },
+      });
+      gsap.to(".hero-watermark", {
+        y: () => window.innerWidth < 768 ? 35 : 100, ease: "none",
+        scrollTrigger: { trigger: containerRef.current, start: "top top", end: "bottom top", scrub: 0.8, invalidateOnRefresh: true },
+      });
     });
     return () => media.revert();
   }, { scope: containerRef });
@@ -61,7 +85,7 @@ export function HeroSection() {
   useGSAP(() => {
     const media = gsap.matchMedia();
     media.add(MOTION_QUERY, () => {
-      if (paused || interacting) return;
+      if (!ready || paused || interacting) return;
       const progress = gsap.fromTo(".hero-progress", { scaleX: 0 }, { scaleX: 1, duration: 7, ease: "none", onComplete: () => setActiveIndex((index) => (index + 1) % FEATURED.length) });
       const visibility = ScrollTrigger.create({
         trigger: containerRef.current, start: "top bottom", end: "bottom top",
@@ -73,11 +97,11 @@ export function HeroSection() {
       return () => document.removeEventListener("visibilitychange", updateVisibility);
     });
     return () => media.revert();
-  }, { scope: containerRef, dependencies: [activeIndex, paused, interacting], revertOnUpdate: true });
+  }, { scope: containerRef, dependencies: [activeIndex, paused, interacting, ready], revertOnUpdate: true });
 
   return (
     <div ref={containerRef} className="relative overflow-clip bg-[#ddddd8] text-[#141414]">
-      <div aria-hidden="true" className="pointer-events-none absolute -left-6 top-48 font-heading text-[clamp(10rem,22vw,25rem)] leading-[0.8] tracking-tight opacity-[0.035] [writing-mode:vertical-rl]">BELL CURVE</div>
+      <div aria-hidden="true" className="hero-watermark pointer-events-none absolute -left-6 top-48 font-heading text-[clamp(10rem,22vw,25rem)] leading-[0.8] tracking-tight opacity-[0.035] [writing-mode:vertical-rl]">BELL CURVE</div>
       <header className="hero-nav studio-shell relative z-30 py-6 sm:py-8">
         <div className="flex items-center justify-between gap-2 sm:gap-4">
           <a href="#top" aria-label="BellCurve Studios home"><StudioWordmark /></a>
@@ -92,18 +116,24 @@ export function HeroSection() {
             <button type="button" aria-expanded={menuOpen} aria-controls="mobile-navigation" aria-label={menuOpen ? "Close navigation" : "Open navigation"} onClick={() => setMenuOpen(!menuOpen)} className="flex size-11 shrink-0 cursor-pointer items-center justify-center border border-black/15 font-mono text-lg lg:hidden">{menuOpen ? "×" : "="}</button>
           </div>
         </div>
-        <nav id="mobile-navigation" aria-label="Mobile navigation" hidden={!menuOpen} className="mt-5 border-t border-black/15 pt-4 lg:hidden">
-          <div className="grid grid-cols-2 gap-3 text-sm font-semibold">
-            {NAVIGATION.map((link) => <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)} className="py-2">{link.label} ↗</a>)}
-          </div>
-        </nav>
+        <AnimatePresence initial={false}>
+          {menuOpen && (
+            <motion.nav id="mobile-navigation" aria-label="Mobile navigation" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: reducedMotion ? 0 : 0.35 }} onAnimationComplete={() => ScrollTrigger.refresh()} className="overflow-hidden lg:hidden">
+              <div className="mt-5 border-t border-black/15 pt-4">
+                <div className="grid grid-cols-2 gap-3 text-sm font-semibold">
+                  {NAVIGATION.map((link) => <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)} className="py-2">{link.label} ↗</a>)}
+                </div>
+              </div>
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </header>
       <section aria-labelledby="hero-heading" className="studio-shell relative z-10 pt-8 pb-16 sm:pt-14 sm:pb-24 lg:pt-16">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
           <div className="hero-intro order-2 flex flex-col justify-between lg:order-1 lg:col-span-4 lg:pr-5">
             <div>
-              <p className="section-label mb-6">Creative technology studio</p>
-              <p className="max-w-[340px] text-lg leading-relaxed font-medium sm:text-xl">Bespoke WebGL &amp; WebGPU engineering, procedural 3D, and fluid motion. We turn ambitious ideas into digital experiences people remember.</p>
+              <p className="section-label mb-6">Independent digital studio</p>
+              <p className="max-w-[340px] text-lg leading-relaxed font-medium sm:text-xl">Thoughtful design. Distinctive digital experiences. We bring your ideas to life with care, clarity, and a sense of possibility.</p>
               <a href="#work" className="mt-7 inline-flex min-h-11 items-center gap-8 border-b border-black/30 pb-2 text-sm font-bold">Explore Works <span aria-hidden="true">↗</span></a>
             </div>
             <div className="mt-12 flex items-end justify-between gap-5 lg:mt-20">
@@ -116,19 +146,19 @@ export function HeroSection() {
               {["Crafting immersive", "digital experiences."].map((line) => <span key={line} className="block overflow-hidden pb-[0.08em]"><span className="hero-title-line block">{line}</span></span>)}
             </h1>
             <div onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)} onFocusCapture={() => setInteracting(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }} className="hero-visual-card relative aspect-[16/11] overflow-hidden rounded-lg border border-black/15 bg-[#c5c4bd] sm:aspect-[16/10]">
-              {FEATURED.map((project, index) => <div key={project.id} aria-hidden={index !== activeIndex} className={`hero-slide absolute inset-0 ${index === 0 ? "" : "opacity-0 invisible"}`}><StudioMedia image={project.image} video={project.video} enabled={index === activeIndex} eager={index === 0} sizes="(min-width: 1024px) 65vw, 100vw" /><div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-black/10" /></div>)}
+              {FEATURED.map((project, index) => <div key={project.id} aria-hidden={index !== activeIndex} className={`hero-slide absolute inset-0 ${index === 0 ? "" : "opacity-0 invisible"}`}><div className="hero-media-parallax absolute -inset-y-[8%] inset-x-0"><StudioMedia image={project.image} video={project.video} enabled={index === activeIndex} eager={index === 0} sizes="(min-width: 1024px) 65vw, 100vw" /></div><div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-black/10" /></div>)}
               <div className="absolute top-4 left-4 z-10 flex gap-2 sm:top-5 sm:left-5">
                 {FEATURED.map((project, index) => <button key={project.id} type="button" aria-pressed={activeIndex === index} aria-label={`View ${project.title}`} onClick={() => { playClickSound(); setActiveIndex(index); }} className={`flex size-11 cursor-pointer items-center justify-center rounded-xs font-mono text-xs ${activeIndex === index ? "bg-[#f0f0eb] text-black" : "border border-white/30 bg-black/30 text-white"}`}>0{index + 1}</button>)}
               </div>
               <div className="absolute right-4 bottom-6 left-4 z-10 flex items-end justify-between gap-5 text-[#f0f0eb] sm:right-6 sm:bottom-7 sm:left-6">
-                <div><p className="mb-2 font-mono text-[9px] tracking-widest text-white/60">{FEATURED[activeIndex].category} / {FEATURED[activeIndex].year}</p><p className="max-w-[330px] text-base leading-tight font-bold sm:text-2xl">{FEATURED[activeIndex].title}</p><p className="mt-2 hidden text-[10px] text-white/55 min-[380px]:block">Selected work · Illustrative visual direction</p></div>
+                <div><p className="mb-2 font-mono text-[9px] tracking-widest text-white/60">{FEATURED[activeIndex].category} / {FEATURED[activeIndex].year}</p><p className="max-w-[330px] text-base leading-tight font-bold sm:text-2xl">{FEATURED[activeIndex].title}</p><p className="mt-2 hidden text-[10px] text-white/55 min-[380px]:block">Selected work</p></div>
                 <div className="flex shrink-0 gap-2"><button type="button" onClick={() => setPaused(!paused)} aria-label={paused ? "Play project slideshow" : "Pause project slideshow"} aria-pressed={paused} className="flex size-11 cursor-pointer items-center justify-center rounded-full border border-white/30 bg-black/25 font-mono text-xs">{paused ? "▶" : "Ⅱ"}</button><button type="button" onClick={() => { playClickSound(); setActiveIndex((index) => (index + 1) % FEATURED.length); }} aria-label="Next featured project" className="flex size-11 cursor-pointer items-center justify-center rounded-full bg-[#f0f0eb] text-lg text-black">↗</button></div>
               </div>
               <div aria-hidden="true" className="absolute inset-x-0 bottom-0 z-10 h-0.5 bg-white/20"><div className="hero-progress h-full origin-left bg-[#f0f0eb]" /></div>
             </div>
           </div>
         </div>
-        <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-black/15 pt-5 font-mono text-[10px] tracking-wide text-black/55 sm:mt-16"><span>24+ GLOBAL DESIGN HONORS</span><span>WEBGL / WEBGPU / GSAP / CREATIVE ENGINEERING</span><span>FOUNDED BY {STUDIO.founder.toUpperCase()}</span></div>
+        <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-black/15 pt-5 font-mono text-[10px] tracking-wide text-black/55 sm:mt-16"><span>24+ design honors</span><span>Made to move you.</span><span>Founded by {STUDIO.founder}</span></div>
       </section>
     </div>
   );

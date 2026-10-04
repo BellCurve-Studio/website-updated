@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { gsap, useGSAP, MOTION_QUERY, prefersReducedMotion, useReducedMotion } from "@/lib/animation";
+import { gsap, useGSAP, MOTION_QUERY, prefersReducedMotion, useReducedMotion, parallaxMedia } from "@/lib/animation";
 import { SERVICES, PARTNER_PERSPECTIVES as TESTIMONIALS } from "@/lib/studio-data";
 import { StudioMedia } from "@/components/ui/studio-media";
 
@@ -126,20 +126,7 @@ export function ServicesSection() {
           }
         );
 
-        gsap.fromTo(
-          ".service-card-parallax-inner",
-          { yPercent: -10 },
-          {
-            yPercent: 10,
-            ease: "none",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1.2,
-            },
-          }
-        );
+        parallaxMedia(".service-card-parallax-inner", containerRef.current!, 8);
       });
       return () => media.revert();
     },

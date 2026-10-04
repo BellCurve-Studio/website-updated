@@ -43,37 +43,37 @@ export interface StudioProject {
 
 export const PROJECTS: StudioProject[] = [
   {
-    id: "aether-spatial-canvas", number: "01/06", title: "Aether 3D Spatial Canvas", year: "2025", category: "WEBGPU / WGSL",
-    description: "Next-generation WebGPU compute shaders and real-time volumetric rendering. A procedural spatial canvas built around light, depth, and interaction.",
-    stat: "WebGPU", statLabel: "Compute shaders & real-time volumetrics",
+    id: "aether-spatial-canvas", number: "01/06", title: "Aether 3D Spatial Canvas", year: "2025", category: "Spatial experiences",
+    description: "A responsive world of light and depth. A spatial canvas that invites exploration and turns every interaction into a moment of discovery.",
+    stat: "Spatial", statLabel: "Light, depth & intuitive interaction",
     image: "/assets/AVIF/697ef14da1c89e5e19e5cca4_3D Development.avif", video: "/assets/WEBM/Development Final Compressed.webm", link: "#contact", hasAwardBadge: true,
   },
   {
-    id: "nexus-immersive-web", number: "02/06", title: "Nexus Immersive Web", year: "2024", category: "THREE.JS / NEXT.JS",
-    description: "A flagship 3D commerce experience combining high-performance WebGL architecture, cinematic motion, and fluid physics.",
-    stat: "WebGL", statLabel: "Three.js, Next.js & GSAP motion",
+    id: "nexus-immersive-web", number: "02/06", title: "Nexus Immersive Web", year: "2024", category: "Immersive websites",
+    description: "A flagship commerce experience that pairs cinematic motion with effortless exploration, making every product feel closer.",
+    stat: "Immersive", statLabel: "A new perspective on digital commerce",
     image: "/assets/AVIF/697ef15eca91ffc3ae831e4e_Web Design.avif", video: "/assets/WEBM/Design FINAL compressed.webm", link: "#contact", hasAwardBadge: true,
   },
   {
-    id: "pulse-generative-ui", number: "03/06", title: "Pulse Generative UI Engine", year: "2023", category: "CANVAS / TYPESCRIPT",
-    description: "Dynamic procedural canvas systems, generative color harmonies, and tactile micro-interactions brought together in a real-time UI engine.",
-    stat: "Canvas", statLabel: "Generative color systems & shader graphs",
+    id: "pulse-generative-ui", number: "03/06", title: "Pulse Generative UI Engine", year: "2023", category: "Generative design",
+    description: "Living colors, generative compositions, and tactile details come together in an interface that responds to every interaction.",
+    stat: "Generative", statLabel: "Expressive color & responsive design",
     image: "/assets/AVIF/697ef16f889c1ea502d8ee65_Visual Identity.avif", video: "/assets/WEBM/Design FINAL compressed.webm", link: "#contact", hasAwardBadge: true,
   },
   {
-    id: "chroma-spatial-commerce", number: "04/06", title: "Chroma Spatial Commerce", year: "2022", category: "WEBGL / CREATIVE DEV",
-    description: "A spatial approach to luxury commerce, pairing artisanal branding with pioneering WebGL interactions and considered GSAP motion.",
-    stat: "3D", statLabel: "Spatial commerce & bespoke brand direction",
+    id: "chroma-spatial-commerce", number: "04/06", title: "Chroma Spatial Commerce", year: "2022", category: "Digital commerce",
+    description: "A spatial approach to luxury commerce, pairing artisanal branding with considered motion and a distinctive sense of place.",
+    stat: "Commerce", statLabel: "Considered experiences for distinctive brands",
     image: "/assets/AVIF/697ef15eca91ffc3ae831e4e_Web Design.avif", video: "/assets/WEBM/Development Final Compressed.webm", link: "#contact", hasAwardBadge: true,
   },
   {
-    id: "blackbird-awards-atelier", number: "05/06", title: "Blackbird Awards Atelier", year: "2025", category: "INTERACTIVE 3D",
+    id: "blackbird-awards-atelier", number: "05/06", title: "Blackbird Awards Atelier", year: "2025", category: "Interactive storytelling",
     description: "An interactive digital stage for an awards ceremony, using spatial composition and real-time lighting to make every moment feel distinctive.",
     stat: "Atelier", statLabel: "Interactive 3D ceremony & digital stage",
     image: "/assets/AVIF/697ef17ae082299197a3aa88_Website Strategy.avif", video: "/assets/WEBM/Strategy Compressed.webm", link: "#contact",
   },
   {
-    id: "verve-interactive-atelier", number: "06/06", title: "Verve Interactive Atelier", year: "2025", category: "EXPERIMENTAL / MOTION",
+    id: "verve-interactive-atelier", number: "06/06", title: "Verve Interactive Atelier", year: "2025", category: "Art direction",
     description: "An experimental studio concept exploring expressive typography, responsive motion, and interactive editorial storytelling.",
     stat: "Motion", statLabel: "Experimental art direction & tactile interfaces",
     image: "/assets/AVIF/697ef10d5fcc93485bf8dfb4_Brand Strategy.avif", video: "/assets/WEBM/Design FINAL compressed.webm", link: "#contact",
@@ -81,12 +81,12 @@ export const PROJECTS: StudioProject[] = [
 ];
 
 export const SERVICES = [
-  { id: "creative-web", title: "Creative Web & WebGPU", description: "Next-gen WebGL, WebGPU, and 3D spatial experiences.", image: "/assets/AVIF/697ef14da1c89e5e19e5cca4_3D Development.avif", video: "/assets/WEBM/Development Final Compressed.webm" },
+  { id: "creative-web", title: "Creative Websites", description: "Distinctive websites and immersive digital experiences.", image: "/assets/AVIF/697ef14da1c89e5e19e5cca4_3D Development.avif", video: "/assets/WEBM/Development Final Compressed.webm" },
   { id: "digital-products", title: "Bespoke Digital Products", description: "High-performance web applications engineered for global scale.", image: "/assets/AVIF/697ef13b8c2c03a57cff1df0_Webflow Development.avif", video: "/assets/WEBM/Development Final Compressed.webm" },
   { id: "brand-worlds", title: "Immersive Brand Worlds", description: "Transforming brands into living, interactive digital playgrounds.", image: "/assets/AVIF/697ef16f889c1ea502d8ee65_Visual Identity.avif", video: "/assets/WEBM/Design FINAL compressed.webm" },
   { id: "ai-interfaces", title: "Real-Time AI & Interfaces", description: "Intelligent interfaces, generative canvases, and conversational state.", image: "/assets/AVIF/697ef15eca91ffc3ae831e4e_Web Design.avif", video: "/assets/WEBM/Development Final Compressed.webm" },
   { id: "experimental-rd", title: "Experimental Tech R&D", description: "Open-source libraries, shader labs, and creative technology experiments.", image: "/assets/AVIF/697ef17ae082299197a3aa88_Website Strategy.avif", video: "/assets/WEBM/Strategy Compressed.webm" },
-  { id: "motion-sound", title: "Motion & Sound Design", description: "Cinematic GSAP narratives and soundscapes synchronized with interaction.", image: "/assets/AVIF/697ef10d5fcc93485bf8dfb4_Brand Strategy.avif", video: "/assets/WEBM/Design FINAL compressed.webm" },
+  { id: "motion-sound", title: "Motion & Sound Design", description: "Considered motion and sound that bring every interaction to life.", image: "/assets/AVIF/697ef10d5fcc93485bf8dfb4_Brand Strategy.avif", video: "/assets/WEBM/Design FINAL compressed.webm" },
 ];
 
 export const PARTNER_PERSPECTIVES = [

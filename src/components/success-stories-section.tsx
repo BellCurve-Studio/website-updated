@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { gsap, useGSAP, MOTION_QUERY } from "@/lib/animation";
+import { gsap, useGSAP, MOTION_QUERY, parallaxMedia } from "@/lib/animation";
 import { PROJECTS, STUDIO, type StudioProject } from "@/lib/studio-data";
 import { StudioMedia } from "@/components/ui/studio-media";
 
@@ -110,32 +110,19 @@ export function SuccessStoriesSection() {
             ".project-media-inner"
           );
           if (mediaInner) {
-            gsap.fromTo(
-              mediaInner,
-              { yPercent: -9 },
-              {
-                yPercent: 9,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: item,
-                  start: "top bottom",
-                  end: "bottom top",
-                  scrub: 1.2,
-                },
-              }
-            );
+            parallaxMedia(mediaInner, item);
           }
 
           const info = item.querySelector<HTMLElement>(".project-info");
           if (info) {
             gsap.fromTo(
               info,
-              { opacity: 0.9, y: 12 },
+              { opacity: 0, y: 24 },
               {
                 opacity: 1,
                 y: 0,
-                duration: 0.5,
-                ease: "power2.out",
+                duration: 0.85,
+                ease: "power3.out",
                 scrollTrigger: {
                   trigger: item,
                   start: "top 85%",

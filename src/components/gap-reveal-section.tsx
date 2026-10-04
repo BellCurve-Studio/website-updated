@@ -48,8 +48,8 @@ export function GapRevealSection() {
           <span className="gap-word-right font-heading text-[clamp(4rem,8.5vw,9.5rem)] leading-none tracking-tight">ORDINARY.</span>
         </div>
         <div className="mx-auto mt-12 grid max-w-[940px] grid-cols-1 gap-8 border-t border-white/15 pt-7 sm:grid-cols-2 lg:mt-16">
-          <p className="text-base leading-relaxed font-semibold sm:text-lg">Template agencies aren’t creative engineering.<br /><span className="text-white/50">Your ambition deserves an original.</span></p>
-          <p className="text-sm leading-relaxed text-white/55">We engineer custom GPU pipelines, considered motion systems, and bespoke typography. Uncompromising craft, fluid interaction, and an experience built around your brand.</p>
+          <p className="text-base leading-relaxed font-semibold sm:text-lg">Your story deserves something original.<br /><span className="text-white/50">Considered from the first idea to the final detail.</span></p>
+          <p className="text-sm leading-relaxed text-white/55">We combine expressive design, thoughtful motion, and meticulous craft to create an experience that feels distinctly yours.</p>
         </div>
       </div>
     </section>

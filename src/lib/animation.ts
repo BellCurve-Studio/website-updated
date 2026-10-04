@@ -24,6 +24,21 @@ export function useReducedMotion() {
   return useSyncExternalStore(subscribeToMotionPreference, prefersReducedMotion, () => false);
 }
 
+export function parallaxMedia(target: Element | string, trigger: Element | string, travel = 9) {
+  const distance = () => window.innerWidth < 768 ? travel * 0.45 : travel;
+  return gsap.fromTo(target, { yPercent: () => -distance() }, {
+    yPercent: distance,
+    ease: "none",
+    scrollTrigger: {
+      trigger,
+      start: "clamp(top bottom)",
+      end: "clamp(bottom top)",
+      scrub: 0.65,
+      invalidateOnRefresh: true,
+    },
+  });
+}
+
 export function revealElements(scope: Element | null) {
   if (!scope) return;
   gsap.utils.toArray<HTMLElement>(".section-reveal", scope).forEach((element) => {

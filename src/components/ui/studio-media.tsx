@@ -52,7 +52,7 @@ export function StudioMedia({ image, video, enabled = true, eager = false, sizes
   }, { scope: containerRef, dependencies: [playing, enabled, reducedMotion] });
 
   return (
-    <div ref={containerRef} className="absolute inset-0">
+    <div ref={containerRef} data-priority-media={eager ? "true" : undefined} className="absolute inset-0">
       <Image src={image} alt={alt} fill sizes={sizes} preload={eager} className="object-cover" />
       {video && <video ref={videoRef} src={video} muted loop playsInline preload="none" aria-hidden="true" onPlaying={() => setPlaying(true)} onPause={() => setPlaying(false)} onError={() => setPlaying(false)} className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0" />}
     </div>

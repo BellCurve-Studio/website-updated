@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { gsap, useGSAP, MOTION_QUERY, prefersReducedMotion, revealElements } from "@/lib/animation";
 import { STUDIO, BENCHMARKS, CLIENTS } from "@/lib/studio-data";
 
-const PARAGRAPHS = ["Purpose-built to deliver unforgettable digital experiences and elevate brands beyond the ordinary.", "We bring creative direction and uncompromising engineering together. Bespoke WebGL and WebGPU, procedural 3D, and fluid motion — built to make ambitious ideas feel alive."];
+const PARAGRAPHS = ["Purpose-built to deliver unforgettable digital experiences and elevate brands beyond the ordinary.", "We bring considered design and thoughtful engineering together. Original worlds, fluid motion, and meaningful interactions — crafted to make ambitious ideas feel alive."];
 
 export function ScrollRevealSection() {
   const containerRef = useRef<HTMLElement>(null);

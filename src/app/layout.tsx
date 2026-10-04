@@ -5,6 +5,7 @@ import "./globals.css";
 import { Noise } from "@/components/ui/noise";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { STUDIO } from "@/lib/studio-data";
+import { PageEntrance } from "@/components/page-entrance";
 
 const quicksand = localFont({
   src: [
@@ -65,7 +66,7 @@ export default function RootLayout({
       className={`${quicksand.variable} ${tanker.variable} ${geistMono.variable} antialiased`}
     >
       <body className="min-h-screen bg-[#ddddd8] text-[#141414] antialiased">
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll><PageEntrance>{children}</PageEntrance></SmoothScroll>
         <Noise
           fullScreen
           className="pointer-events-none fixed inset-0 z-50 h-full w-full"

@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import { gsap, ScrollTrigger, useGSAP, MOTION_QUERY, prefersReducedMotion } from "@/lib/animation";
+import { gsap, ScrollTrigger, useGSAP, MOTION_QUERY, useReducedMotion } from "@/lib/animation";
 import { QUESTIONS } from "@/lib/studio-data";
 import { StudioCta } from "@/components/ui/studio-cta";
 
@@ -18,24 +19,7 @@ function FaqItem({
   onToggle: () => void;
 }) {
   const itemRef = useRef<HTMLDivElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      const panel = panelRef.current;
-      if (!panel) return;
-
-      gsap.to(panel, {
-        height: expanded ? "auto" : 0,
-        opacity: expanded ? 1 : 0,
-        duration: prefersReducedMotion() ? 0 : 0.45,
-        ease: "power3.inOut",
-        overwrite: true,
-        onComplete: () => ScrollTrigger.refresh(),
-      });
-    },
-    { scope: itemRef, dependencies: [expanded] },
-  );
+  const reducedMotion = useReducedMotion();
 
   return (
     <div ref={itemRef} className="faq-item border-t border-dotted border-white/20">
@@ -53,19 +37,22 @@ function FaqItem({
           <span aria-hidden="true" className="mr-1 size-1.5 shrink-0 rounded-full border border-current opacity-50 group-hover:bg-current group-focus-visible:bg-current group-data-[expanded=true]:bg-current group-data-[expanded=true]:opacity-100" />
         </button>
       </h3>
-      <div
-        ref={panelRef}
+      <motion.div
+        initial={false}
+        animate={{ height: expanded ? "auto" : 0, opacity: expanded ? 1 : 0 }}
+        transition={{ duration: reducedMotion ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
+        onAnimationComplete={() => ScrollTrigger.refresh()}
         id={`faq-answer-${index}`}
         role="region"
         aria-labelledby={`faq-question-${index}`}
         aria-hidden={!expanded}
         inert={!expanded}
-        className="h-0 overflow-hidden"
+        className="overflow-hidden"
       >
         <div className="max-w-[560px] space-y-4 py-6 pr-6 text-sm leading-relaxed font-medium text-[#aaa9a3] sm:text-base">
           {item.answer.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -141,7 +128,7 @@ export function FaqSection() {
           </div>
           <div>
             <p className="mb-4 max-w-[270px] text-lg leading-tight font-bold tracking-tight text-[#a7a7a0] sm:text-2xl lg:mb-6">
-              Would like to know<br className="hidden lg:block" /> if we&apos;d be a good fit?
+              Wondering if<br className="hidden lg:block" /> we&apos;re a good fit?
             </p>
             <StudioCta className="gap-2 text-xs sm:text-sm lg:text-base">Book Consultation</StudioCta>
           </div>

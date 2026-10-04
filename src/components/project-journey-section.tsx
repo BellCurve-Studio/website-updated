@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { gsap, useGSAP, MOTION_QUERY } from "@/lib/animation";
+import { gsap, useGSAP, MOTION_QUERY, parallaxMedia } from "@/lib/animation";
 import { STUDIO } from "@/lib/studio-data";
 import { StudioMedia } from "@/components/ui/studio-media";
 
@@ -55,36 +55,24 @@ export function ProjectJourneySection() {
     () => {
       const media = gsap.matchMedia();
       media.add(MOTION_QUERY, () => {
+        gsap.from(".process-heading", { y: 24, opacity: 0, duration: 0.9, ease: "power3.out", scrollTrigger: { trigger: ".process-heading", start: "top 88%", once: true } });
         const stepItems = gsap.utils.toArray<HTMLElement>(".process-step-item");
         stepItems.forEach((item) => {
           const videoInner = item.querySelector<HTMLElement>(
             ".process-video-parallax"
           );
           if (videoInner) {
-            gsap.fromTo(
-              videoInner,
-              { yPercent: -10 },
-              {
-                yPercent: 10,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: item,
-                  start: "top bottom",
-                  end: "bottom top",
-                  scrub: 1.2,
-                },
-              }
-            );
+            parallaxMedia(videoInner, item);
           }
 
           gsap.fromTo(
             item,
-            { opacity: 0.85, y: 20 },
+            { opacity: 0, y: 28 },
             {
               opacity: 1,
               y: 0,
-              duration: 0.6,
-              ease: "power2.out",
+              duration: 0.85,
+              ease: "power3.out",
               scrollTrigger: {
                 trigger: item,
                 start: "top 82%",
@@ -115,7 +103,7 @@ export function ProjectJourneySection() {
       />
 
       <div className="relative z-10 mx-auto max-w-[1640px]">
-        <div className="w-full mb-14 sm:mb-20 lg:mb-24">
+        <div className="process-heading w-full mb-14 sm:mb-20 lg:mb-24">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="100%"
