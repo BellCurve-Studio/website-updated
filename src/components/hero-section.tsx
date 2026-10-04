@@ -367,7 +367,7 @@ export function HeroSection() {
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-black/15 pt-5 font-mono text-[10px] tracking-wide text-black/55 sm:mt-16">
           <span>Diagnosis before a proposal</span>
           <span>Outcomes before features.</span>
-          <span>Built around your business.</span>
+          <span>Built around your business</span>
         </div>
       </section>
     </div>
