@@ -3,6 +3,7 @@ import { validateEnquiry } from "@/lib/contact";
 import { sendEnquiry } from "@/lib/mail";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 const attempts = new Map<string, { count: number; expires: number }>();
 const WINDOW_MS = 15 * 60 * 1000;
@@ -12,15 +13,17 @@ function reply(body: object, status: number, extraHeaders: Record<string, string
   return Response.json(body, { status, headers: { "Cache-Control": "no-store", ...extraHeaders } });
 }
 
-function allowAttempt(request: Request) {
+function allowAttempt(request: Request, email: string) {
   const now = Date.now();
   for (const [key, value] of attempts) if (value.expires <= now) attempts.delete(key);
   const address = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
-  const key = createHash("sha256").update(address).digest("hex");
-  const previous = attempts.get(key);
-  if (previous && previous.count >= 3) return false;
-  if (!previous && attempts.size >= 1000) return false;
-  attempts.set(key, { count: (previous?.count || 0) + 1, expires: previous?.expires || now + WINDOW_MS });
+  const keys = [`address:${address}`, `email:${email.toLowerCase()}`].map((value) => createHash("sha256").update(value).digest("hex"));
+  if (keys.some((key) => (attempts.get(key)?.count || 0) >= 3)) return false;
+  if (attempts.size + keys.filter((key) => !attempts.has(key)).length > 1000) return false;
+  for (const key of keys) {
+    const previous = attempts.get(key);
+    attempts.set(key, { count: (previous?.count || 0) + 1, expires: previous?.expires || now + WINDOW_MS });
+  }
   return true;
 }
 
@@ -55,11 +58,17 @@ export async function POST(request: Request) {
   if (honeypot !== undefined && honeypot !== "") return reply({ message: "Please submit the contact form." }, 400);
   const { data, errors } = validateEnquiry(payload);
   if (!data) return reply({ message: "Please check the highlighted fields.", errors }, 422);
-  if (!allowAttempt(request)) return reply({ message: "You’ve sent several enquiries recently. Please try again in 15 minutes or email us directly." }, 429, { "Retry-After": "900" });
+  if (!allowAttempt(request, data.email)) return reply({ message: "You’ve sent several enquiries recently. Please try again in 15 minutes or email us directly." }, 429, { "Retry-After": "900" });
 
   try {
-    await sendEnquiry(data);
-    return reply({ message: "Your enquiry has been sent. We’ll reply to the email you provided." }, 200);
+    const { confirmationSent } = await sendEnquiry(data);
+    if (!confirmationSent) console.error("Enquiry confirmation could not be delivered");
+    return reply({
+      confirmationSent,
+      message: confirmationSent
+        ? "Your enquiry has been received. A confirmation email is on its way, and our team will be in touch."
+        : "Your enquiry has been received. We couldn’t send a confirmation email, but our team will still be in touch. No need to submit again.",
+    }, 200);
   } catch (error) {
     const code = error && typeof error === "object" && "code" in error ? String(error.code) : "MAIL_UNAVAILABLE";
     console.error("Contact delivery failed", /^[A-Z_]+$/.test(code) ? code : "MAIL_UNAVAILABLE");

@@ -39,35 +39,16 @@ const TEXT_FIELDS = [
     required: true,
   },
   {
-    name: "organization",
-    label: "Business or organization",
-    placeholder: "Your organization’s name",
-    type: "text",
-    autoComplete: "organization",
-    required: false,
-  },
-  {
-    name: "website",
-    label: "Website",
-    placeholder: "https://yourwebsite.com",
-    type: "url",
-    autoComplete: "url",
-    required: false,
-  },
-  {
     name: "phone",
-    label: "Phone number",
-    placeholder: "Include your country code",
+    label: "Contact number",
+    placeholder: "+91 98765 43210",
     type: "tel",
     autoComplete: "tel",
-    required: false,
+    required: true,
   },
 ] as const;
 const SELECT_FIELDS = [
-  { name: "engagement", label: "Where would you like to start?" },
   { name: "service", label: "What might you need help with?" },
-  { name: "budget", label: "Budget in mind (INR)" },
-  { name: "timeline", label: "When would you like to start?" },
 ] as const;
 
 export function ContactSection() {
@@ -146,7 +127,7 @@ export function ContactSection() {
           ...data,
           websiteConfirmation: values.get("websiteConfirmation") || "",
         }),
-        signal: AbortSignal.timeout(35000),
+        signal: AbortSignal.timeout(60000),
       });
       const result = await response.json();
       if (!response.ok) {
@@ -252,16 +233,13 @@ export function ContactSection() {
           </div>
           <fieldset
             disabled={sending}
-            className="grid min-w-0 grid-cols-1 gap-x-6 gap-y-7 sm:grid-cols-2"
+            className="grid min-w-0 grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2"
           >
             <legend className="sr-only">
               Your contact details and enquiry
             </legend>
             {TEXT_FIELDS.map((field) => (
-              <div
-                key={field.name}
-                className={field.name === "phone" ? "sm:col-span-2" : undefined}
-              >
+              <div key={field.name}>
                 <label
                   htmlFor={`contact-${field.name}`}
                   className="text-sm font-semibold"
@@ -296,11 +274,7 @@ export function ContactSection() {
                 <select
                   id={`contact-${field.name}`}
                   name={field.name}
-                  defaultValue={
-                    field.name === "service"
-                      ? "Not sure yet"
-                      : CONTACT_OPTIONS[field.name][0]
-                  }
+                  defaultValue="Not sure yet"
                   className={`${INPUT_CLASS} cursor-pointer scheme-dark`}
                   {...fieldAttributes(field.name)}
                 >
@@ -331,9 +305,9 @@ export function ContactSection() {
                 required
                 minLength={20}
                 maxLength={CONTACT_LIMITS.message}
-                rows={5}
-                placeholder="How does it work today? Where does it get difficult? What would a better outcome look like? Add any deadline or context that matters."
-                className={`${INPUT_CLASS} min-h-44 resize-y leading-relaxed`}
+                rows={4}
+                placeholder="What’s happening today, and what would you like to work better?"
+                className={`${INPUT_CLASS} min-h-36 resize-y leading-relaxed`}
                 {...fieldAttributes("message")}
               />
               {fieldError("message")}

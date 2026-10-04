@@ -1,22 +1,14 @@
 export const CONTACT_OPTIONS = {
-  engagement: ["Free basic audit", "Strategy & consulting", "Build & improve", "Help me decide"],
   service: ["Digital experiences", "Business systems", "Automation & AI", "More than one", "Not sure yet"],
-  budget: ["Not decided yet", "Under ₹1 lakh", "₹1–3 lakh", "₹3–10 lakh", "₹10 lakh or more", "Let’s discuss"],
-  timeline: ["Flexible / exploring", "Within a month", "In 1–3 months", "In 3–6 months", "A specific deadline"],
 };
 
-export const CONTACT_LIMITS = { name: 100, email: 254, organization: 150, website: 500, phone: 40, message: 4000 };
+export const CONTACT_LIMITS = { name: 100, email: 254, phone: 40, message: 4000 };
 
 export interface ContactEnquiry {
   name: string;
   email: string;
-  organization: string;
-  website: string;
   phone: string;
-  engagement: string;
   service: string;
-  budget: string;
-  timeline: string;
   message: string;
   consent: boolean;
 }
@@ -41,16 +33,9 @@ export function validateEnquiry(input: unknown): { data?: ContactEnquiry; errors
 
   if (!fields.name) errors.name = "Please tell us your name.";
   if (!/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(fields.email)) errors.email = "Please enter a valid email address.";
+  const phoneDigits = fields.phone.replace(/\D/g, "");
+  if (!/^\+?[\d\s().-]+$/.test(fields.phone) || phoneDigits.length < 7 || phoneDigits.length > 15) errors.phone = "Please enter a valid contact number, including your country code if needed.";
   if (fields.message.length < 20) errors.message = "Please share a little more detail (at least 20 characters).";
-  if (fields.website) {
-    try {
-      const url = new URL(fields.website);
-      if (!["http:", "https:"].includes(url.protocol) || !url.hostname.includes(".") || url.username || url.password) throw new Error("Invalid website");
-    } catch {
-      errors.website = "Please enter a website starting with https:// or http://.";
-    }
-  }
-
   for (const [key, options] of Object.entries(CONTACT_OPTIONS)) {
     const field = key as keyof typeof CONTACT_OPTIONS;
     const raw = source[field];
@@ -59,5 +44,5 @@ export function validateEnquiry(input: unknown): { data?: ContactEnquiry; errors
   }
   if (source.consent !== true) errors.consent = "Please allow us to reply to your enquiry.";
   if (Object.keys(errors).length) return { errors };
-  return { data: { name: fields.name, email: fields.email, organization: fields.organization, website: fields.website, phone: fields.phone, engagement: fields.engagement, service: fields.service, budget: fields.budget, timeline: fields.timeline, message: fields.message, consent: true }, errors };
+  return { data: { name: fields.name, email: fields.email, phone: fields.phone, service: fields.service, message: fields.message, consent: true }, errors };
 }
