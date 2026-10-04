@@ -21,6 +21,7 @@ export function createMailTransport() {
     pool: true,
     maxConnections: 1,
     maxMessages: 2,
+    maxRequeues: 0,
     auth: { user: requiredSetting("SMTP_USERNAME"), pass: host === "smtp.gmail.com" ? password.replace(/\s/g, "") : password },
     tls: { minVersion: "TLSv1.2", rejectUnauthorized: true },
     connectionTimeout: 10000,
